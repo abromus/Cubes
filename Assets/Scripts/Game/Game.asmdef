@@ -1,0 +1,19 @@
+{
+    "name": "Game",
+    "rootNamespace": "Cubes.Game",
+    "references": [
+        "Core",
+        "UniRx",
+        "Unity.TextMeshPro",
+        "Zenject"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
