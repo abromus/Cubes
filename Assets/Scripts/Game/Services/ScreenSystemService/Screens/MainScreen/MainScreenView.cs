@@ -48,9 +48,15 @@ namespace Cubes.Game.Services
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        internal void AddShapeTower(World.IShapePresenter shapePresenter)
+        internal void AddShapeToTower(World.IShapePresenter shapePresenter)
         {
             _tower.Add(shapePresenter);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        internal UnityEngine.Vector2 GetTowerSize()
+        {
+            return _tower.GetAvailableSize();
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]

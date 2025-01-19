@@ -6,13 +6,13 @@ namespace Cubes.Game.Services
     {
         private MainScreenModel _model;
         private MainScreenView _view;
+        private ShapeResolver _resolver;
 
         private ScreenSystemService _screenSystemService;
         private Factories.ShapeFactory _factory;
         private Configs.ShapesConfig _config;
 
         private readonly CompositeDisposable _subscriptions = new();
-        private readonly ShapeResolver _resolver = new();
 
         public override bool IsShown => _model.IsShown.Value;
 
@@ -31,6 +31,7 @@ namespace Cubes.Game.Services
             _view = view as MainScreenView;
 
             InitializeShapes();
+            InitializeResolver();
         }
 
         public override void Show()
@@ -63,7 +64,7 @@ namespace Cubes.Game.Services
             if (_resolver.TryAddShape(draggableShape) == false)
                 return;
 
-            _view.AddShapeTower(_model.DraggableShape);
+            _view.AddShapeToTower(_model.DraggableShape);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -92,6 +93,13 @@ namespace Cubes.Game.Services
 
                 _model.AddShape(shapePresenter);
             }
+        }
+
+        private void InitializeResolver()
+        {
+            var towerSize = _view.GetTowerSize();
+
+            _resolver = new(in towerSize);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]

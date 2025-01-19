@@ -24,6 +24,14 @@
             _shapes.Add(shape);
         }
 
+        internal UnityEngine.Vector2 GetAvailableSize()
+        {
+            var rect = _rectTransform.rect;
+            var size = new UnityEngine.Vector2(rect.size.x, rect.height * Constants.Half + _rectTransform.anchoredPosition.y - _startPositionY);
+
+            return size;
+        }
+
         private UnityEngine.Vector2 GetShapePosition(World.IShapePresenter shape)
         {
             var shapeRectTransform = shape.DraggableRectTransform;
@@ -35,7 +43,7 @@
 
                 UnityEngine.RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform, screenPoint, null, out var position);
 
-                position.y = _startPositionY + shapeHeight * 0.5f;
+                position.y = _startPositionY + shapeHeight * Constants.Half;
 
                 return position;
             }

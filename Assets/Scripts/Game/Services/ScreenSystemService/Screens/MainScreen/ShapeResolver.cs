@@ -2,9 +2,14 @@
 {
     internal sealed class ShapeResolver
     {
+        private readonly System.Collections.Generic.List<IRestriction> _restrictions = new(4);
         private readonly System.Collections.Generic.List<World.IShapePresenter> _shapes = new(32);
-        private readonly UnityEngine.Vector3[] _firstShapeCorners = new UnityEngine.Vector3[4];
-        private readonly UnityEngine.Vector3[] _secondShapeCorners = new UnityEngine.Vector3[4];
+
+        internal ShapeResolver(in UnityEngine.Vector2 containerSize)
+        {
+            _restrictions.Add(new IntersectionRestriction());
+            _restrictions.Add(new ContainerSizeRestriction(in containerSize));
+        }
 
         internal bool TryAddShape(World.IShapePresenter shape)
         {
@@ -32,23 +37,15 @@
 
             var lastShape = _shapes[^1];
 
-            return IsShapesIntersected(lastShape, shape);
-        }
+            for (int i = 0; i < _restrictions.Count; i++)
+            {
+                var restriction = _restrictions[i];
+                
+                if (restriction.Check(lastShape, shape) == false)
+                    return false;
+            }
 
-        private bool IsShapesIntersected(World.IShapePresenter firstShape, World.IShapePresenter secondShape)
-        {
-            firstShape.RectTransform.GetWorldCorners(_firstShapeCorners);
-            secondShape.DraggableRectTransform.GetWorldCorners(_secondShapeCorners);
-
-            return IsRectIntersecting(_firstShapeCorners, _secondShapeCorners);
-        }
-
-        private bool IsRectIntersecting(UnityEngine.Vector3[] firstShapeCorners, UnityEngine.Vector3[] secondShapeCorners)
-        {
-            var minXIndex = 0;
-            var maxXIndex = 2;
-
-            return (firstShapeCorners[maxXIndex].x < secondShapeCorners[minXIndex].x || secondShapeCorners[maxXIndex].x < firstShapeCorners[minXIndex].x) == false;
+            return true;
         }
     }
 }
