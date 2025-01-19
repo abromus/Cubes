@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58bf56275d878fa4a985c7f3e15c6ddd, type: 3}
   m_Name: GameSettingsInstaller
   m_EditorClassIdentifier: 
-  _cubesConfig: {fileID: 11400000, guid: 961582fd1c0c680489ec9ccdd7a57ee9, type: 2}
+  _shapesConfig: {fileID: 11400000, guid: 961582fd1c0c680489ec9ccdd7a57ee9, type: 2}
   _screensConfig: {fileID: 11400000, guid: adecdf42d59e107408ea01510e8b1ed1, type: 2}

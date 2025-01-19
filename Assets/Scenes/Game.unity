@@ -134,6 +134,9 @@ GameObject:
   - component: {fileID: 1951985211}
   - component: {fileID: 1951985210}
   - component: {fileID: 1951985209}
+  - component: {fileID: 1951985214}
+  - component: {fileID: 1951985213}
+  - component: {fileID: 1951985212}
   m_Layer: 0
   m_Name: GameSceneController
   m_TagString: Untagged
@@ -181,9 +184,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameSceneController: {fileID: 1951985209}
-  _audioServicePrefab: {fileID: 5981454261242941512, guid: af6135c701f00c24faff82ab70628797, type: 3}
-  _screenSystemServicePrefab: {fileID: 4236279233329189896, guid: 72be7951b3ffaf8438b7c4058b91e4af, type: 3}
-  _eventSystemServicePrefab: {fileID: 7348811229971108436, guid: 7d00fbfdc101f4f41ba7fbff79eddb03, type: 3}
 --- !u!114 &1951985211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,6 +200,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6546b2024caca9f4c86f8ea77afeda72, type: 2}
   _monoInstallers:
   - {fileID: 1951985210}
+  - {fileID: 1951985214}
+  - {fileID: 1951985213}
+  - {fileID: 1951985212}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -217,6 +220,45 @@ MonoBehaviour:
   _parentNewObjectsUnderSceneContext: 0
   _contractNames: []
   _parentContractNames: []
+--- !u!114 &1951985212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951985207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62c66e33f935bf44d86d5f5962b9a7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1951985213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951985207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a0722add6a09e249a375b4d126c1a94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1951985214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951985207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcedb411ee7772140940fb215e8a69fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioServicePrefab: {fileID: 5981454261242941512, guid: af6135c701f00c24faff82ab70628797, type: 3}
+  _screenSystemServicePrefab: {fileID: 4236279233329189896, guid: 72be7951b3ffaf8438b7c4058b91e4af, type: 3}
+  _eventSystemServicePrefab: {fileID: 7348811229971108436, guid: 7d00fbfdc101f4f41ba7fbff79eddb03, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

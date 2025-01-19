@@ -4,18 +4,18 @@ namespace Cubes.Game.Services
     {
         [UnityEngine.SerializeField] private UnityEngine.Transform _screensContainer;
 
-        private Configs.ScreenInfo[] _screenInfos;
+        private BaseScreenView[] _screenViews;
 
-        [Zenject.Inject] private readonly Zenject.IInstantiator _diContainer;
         [Zenject.Inject] private readonly Configs.ScreensConfig _screensConfig;
+        [Zenject.Inject] private readonly Factories.ScreenFactory _screenFactory;
 
-        private readonly System.Collections.Generic.Dictionary<Configs.ScreenType, BaseScreen> _screens = new(4);
+        private readonly System.Collections.Generic.Dictionary<Configs.ScreenType, IScreenPresenter> _screens = new(4);
 
         [Zenject.Inject]
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public void Construct()
         {
-            _screenInfos = _screensConfig.ScreenInfos;
+            _screenViews = _screensConfig.Screens;
         }
 
         [UnityEngine.Scripting.Preserve]
@@ -24,8 +24,7 @@ namespace Cubes.Game.Services
             var screens = _screens.Values;
 
             foreach (var screen in screens)
-                if (screen != null && screen.gameObject != null)
-                    Destroy(screen.gameObject);
+                screen.Destroy();
 
             _screens.Clear();
         }
@@ -39,18 +38,23 @@ namespace Cubes.Game.Services
             if (TryShowFromCache(screenType))
                 return;
 
-            for (int i = 0; i < _screenInfos.Length; i++)
+            for (int i = 0; i < _screenViews.Length; i++)
             {
-                var screenInfo = _screenInfos[i];
+                var screenViewPrefab = _screenViews[i];
 
-                if (screenInfo.ScreenType != screenType)
+                if (screenViewPrefab.ScreenType != screenType)
                     continue;
 
-                var screenPrefab = screenInfo.Screen;
-                var screen = _diContainer.InstantiatePrefabForComponent<BaseScreen>(screenPrefab, _screensContainer);
-                screen.Show();
+                if (_screenFactory.TryCreate(screenType, _screensContainer, out var presenter) == false)
+                {
+#if UNITY_EDITOR
+                    UnityEngine.Debug.LogError($"[ScreenSystemService]: Can't create screen {screenType}");
+#endif
+                }
 
-                _screens.Add(screenType, screen);
+                presenter.Show();
+
+                _screens.Add(screenType, presenter);
 
                 return;
             }
