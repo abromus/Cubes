@@ -12,6 +12,7 @@ namespace Cubes.Game.Services
         private Configs.ShapesConfig _config;
 
         private readonly CompositeDisposable _subscriptions = new();
+        private readonly ShapeResolver _resolver = new();
 
         public override bool IsShown => _model.IsShown.Value;
 
@@ -51,11 +52,21 @@ namespace Cubes.Game.Services
             _view.Destroy();
         }
 
-        internal void UpdateDraggableShapeParent(UnityEngine.Transform parent)
+        internal void ResolveShape(DroppedZone zone)
         {
-            _model.DraggableShape.UpdateParent(parent);
+            var draggableShape = _model.DraggableShape;
+
+#if UNITY_EDITOR
+            UnityEngine.Assertions.Assert.IsNotNull(draggableShape);
+#endif
+
+            if (_resolver.TryAddShape(draggableShape) == false)
+                return;
+
+            _view.AddShapeTower(_model.DraggableShape);
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         internal void ShowSettingsScreen()
         {
             _screenSystemService.Show(Configs.ScreenType.Settings);
@@ -83,6 +94,7 @@ namespace Cubes.Game.Services
             }
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private void Subscribe()
         {
             _model.IsShown.Subscribe(OnUpdateIsShown).AddTo(_subscriptions);
@@ -119,7 +131,7 @@ namespace Cubes.Game.Services
             {
                 _model.UpdateDraggableShape(null);
 
-                shapePresenter.UpdateDraggableParent(shapePresenter.DraggableShapeParent);
+                shapePresenter.UpdateDraggableParent(shapePresenter.RectTransform);
             }
         }
     }

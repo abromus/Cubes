@@ -1,5 +1,4 @@
-﻿using System;
-using UniRx;
+﻿using UniRx;
 
 namespace Cubes.Game.World
 {
@@ -13,9 +12,13 @@ namespace Cubes.Game.World
         private readonly CompositeDisposable _subscriptions = new();
         private readonly Subject<DraggableShapeInfo> _dragging = new();
 
-        public override UnityEngine.RectTransform ScreenRectTransform => _screenRectTransform;
+        public override UnityEngine.Vector2 Position => _model.Position.Value;
 
-        public override UnityEngine.RectTransform DraggableShapeParent => _view.DraggableShapeParent;
+        public override UnityEngine.RectTransform RectTransform => _view.RectTransform;
+
+        public override UnityEngine.RectTransform DraggableRectTransform => _view.DraggableRectTransform;
+
+        public override UnityEngine.RectTransform ScreenRectTransform => _screenRectTransform;
 
         public override Subject<DraggableShapeInfo> Dragging => _dragging;
 
@@ -37,7 +40,13 @@ namespace Cubes.Game.World
             Unsubscribe();
         }
 
-        public override void UpdatePosition(UnityEngine.EventSystems.PointerEventData eventData)
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public override void UpdatePosition(in UnityEngine.Vector2 position)
+        {
+            _model.UpdatePosition(in position);
+        }
+
+        public override void UpdateDraggablePosition(UnityEngine.EventSystems.PointerEventData eventData)
         {
             UnityEngine.RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 _screenRectTransform,
@@ -45,13 +54,13 @@ namespace Cubes.Game.World
                 eventData.pressEventCamera,
                 out UnityEngine.Vector2 position);
 
-            _model.UpdatePosition(in position);
+            _model.UpdateDraggablePosition(in position);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public override void UpdatePosition(in UnityEngine.Vector2 position)
+        public override void UpdateDraggablePosition(in UnityEngine.Vector2 position)
         {
-            _model.UpdatePosition(in position);
+            _model.UpdateDraggablePosition(in position);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -69,6 +78,7 @@ namespace Cubes.Game.World
         private void Subscribe()
         {
             _model.Position.Subscribe(OnUpdatePosition).AddTo(_subscriptions);
+            _model.DraggablePosition.Subscribe(OnUpdateDraggablePosition).AddTo(_subscriptions);
             _view.Dragging.Subscribe(OnDragging).AddTo(_subscriptions);
         }
 
@@ -82,7 +92,12 @@ namespace Cubes.Game.World
 
         private void OnUpdatePosition(UnityEngine.Vector2 position)
         {
-            _view.UpdateDragPosition(in position);
+            _view.UpdatePosition(in position);
+        }
+
+        private void OnUpdateDraggablePosition(UnityEngine.Vector2 position)
+        {
+            _view.UpdateDraggablePosition(in position);
         }
 
         private void OnDragging(bool isDragging)

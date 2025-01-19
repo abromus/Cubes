@@ -136,7 +136,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rectTransform: {fileID: 316656640264704869}
   _draggableImage: {fileID: 3841253307726228858}
-  _draggableImageRectTransform: {fileID: 6433132794810901703}
+  _draggableRectTransform: {fileID: 6433132794810901703}
 --- !u!114 &1226619034054156029
 MonoBehaviour:
   m_ObjectHideFlags: 0

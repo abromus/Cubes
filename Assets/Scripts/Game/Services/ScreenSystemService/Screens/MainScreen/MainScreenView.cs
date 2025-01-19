@@ -9,6 +9,7 @@ namespace Cubes.Game.Services
         [UnityEngine.SerializeField] private UnityEngine.RectTransform _draggingShapeContainer;
         [UnityEngine.SerializeField] private DroppedZone _holeZone;
         [UnityEngine.SerializeField] private DroppedZone _shapesStorageZone;
+        [UnityEngine.SerializeField] private ShapesTower _tower;
         [UnityEngine.Space]
         [UnityEngine.SerializeField] private UnityEngine.AudioClip _backgroundMusic;
 
@@ -44,6 +45,12 @@ namespace Cubes.Game.Services
 
             StopBackgroundMusic();
             Unsubscribe();
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        internal void AddShapeTower(World.IShapePresenter shapePresenter)
+        {
+            _tower.Add(shapePresenter);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -84,7 +91,7 @@ namespace Cubes.Game.Services
 
         private void OnShapesStorageZoneDropped(DroppedZone zone)
         {
-            _presenter.UpdateDraggableShapeParent(zone.transform);
+            _presenter.ResolveShape(zone);
         }
     }
 }

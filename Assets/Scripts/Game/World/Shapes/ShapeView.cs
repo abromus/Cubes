@@ -9,15 +9,18 @@ namespace Cubes.Game.World
     {
         [SerializeField] private RectTransform _rectTransform;
         [SerializeField] private UnityEngine.UI.Image _draggableImage;
-        [SerializeField] private RectTransform _draggableImageRectTransform;
+        [SerializeField] private RectTransform _draggableRectTransform;
 
         private bool _isDragging = false;
         private Vector2 _anchorMin;
         private Vector2 _anchorMax;
 
         private readonly UniRx.Subject<bool> _dragging = new();
+        private readonly Vector2 _zero = Vector2.zero;
 
-        internal RectTransform DraggableShapeParent => _rectTransform;
+        internal RectTransform RectTransform => _rectTransform;
+
+        internal RectTransform DraggableRectTransform => _draggableRectTransform;
 
         internal UniRx.Subject<bool> Dragging => _dragging;
 
@@ -32,9 +35,15 @@ namespace Cubes.Game.World
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public void UpdateDragPosition(in Vector2 position)
+        public void UpdatePosition(in Vector2 position)
         {
-            _draggableImageRectTransform.anchoredPosition = position;
+            _rectTransform.anchoredPosition = position;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public void UpdateDraggablePosition(in Vector2 position)
+        {
+            _draggableRectTransform.anchoredPosition = position;
         }
 
         public void UpdateParent(Transform parent)
@@ -42,13 +51,12 @@ namespace Cubes.Game.World
             _rectTransform.SetParent(parent);
             _rectTransform.anchorMin = _anchorMin;
             _rectTransform.anchorMax = _anchorMax;
-            _rectTransform.anchoredPosition = Vector2.zero;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public void UpdateDraggableParent(Transform parent)
         {
-            _draggableImageRectTransform.SetParent(parent);
+            _draggableRectTransform.SetParent(parent);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -63,7 +71,7 @@ namespace Cubes.Game.World
             if (_isDragging == false)
                 return;
 
-            Presenter.UpdatePosition(eventData);
+            Presenter.UpdateDraggablePosition(eventData);
         }
 
         public void OnEndDrag(PointerEventData eventData)
@@ -72,9 +80,7 @@ namespace Cubes.Game.World
 
             _dragging.OnNext(_isDragging);
 
-            Presenter.UpdatePosition(Vector2.zero);
-
-            _draggableImageRectTransform.anchoredPosition = Vector2.zero;
+            Presenter.UpdateDraggablePosition(in _zero);
         }
     }
 }
