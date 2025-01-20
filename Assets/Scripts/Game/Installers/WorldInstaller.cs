@@ -2,7 +2,7 @@
 {
     internal sealed class WorldInstaller : Zenject.MonoInstaller
     {
-        [Zenject.Inject] private readonly Configs.ShapesConfig _shapesConfig;
+        [Zenject.Inject] private readonly Configs.IShapesConfig _shapesConfig;
 
         public override void InstallBindings()
         {

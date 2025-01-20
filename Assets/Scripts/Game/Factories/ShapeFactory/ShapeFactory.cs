@@ -5,7 +5,7 @@ namespace Cubes.Game.Factories
     internal sealed class ShapeFactory
     {
         [Zenject.Inject] private readonly Zenject.DiContainer _diContainer;
-        [Zenject.Inject] private readonly Configs.ShapesConfig _shapesConfig;
+        [Zenject.Inject] private readonly Configs.IShapesConfig _shapesConfig;
 
         private readonly System.Collections.Generic.Dictionary<Configs.ShapeType, BaseShapeView> _viewPrefabs = new(8);
 

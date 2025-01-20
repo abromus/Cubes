@@ -11,7 +11,7 @@ namespace Cubes.Game.Services
 
         private ScreenSystemService _screenSystemService;
         private Factories.ShapeFactory _factory;
-        private Configs.ShapesConfig _config;
+        private Configs.IShapesConfig _config;
 
         private readonly CompositeDisposable _subscriptions = new();
 
@@ -19,7 +19,7 @@ namespace Cubes.Game.Services
 
         [Zenject.Inject]
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public void Construct(ScreenSystemService screenSystemService, Factories.ShapeFactory factory, Configs.ShapesConfig config)
+        public void Construct(ScreenSystemService screenSystemService, Factories.ShapeFactory factory, Configs.IShapesConfig config)
         {
             _screenSystemService = screenSystemService;
             _factory = factory;

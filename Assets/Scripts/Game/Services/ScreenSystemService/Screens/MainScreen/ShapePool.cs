@@ -3,7 +3,7 @@
     internal sealed class ShapePool
     {
         private readonly Factories.ShapeFactory _factory;
-        private readonly Configs.ShapesConfig _config;
+        private readonly Configs.IShapesConfig _config;
         private readonly UnityEngine.RectTransform _parent;
         private readonly UnityEngine.RectTransform _screenRectTransform;
 

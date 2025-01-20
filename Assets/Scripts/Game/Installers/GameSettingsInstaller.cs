@@ -10,7 +10,7 @@ namespace Cubes.Game.Installers
 
         public override void InstallBindings()
         {
-            Container.BindInstance(_shapesConfig).NonLazy();
+            Container.Bind<Configs.IShapesConfig>().FromInstance(_shapesConfig).NonLazy();
             Container.BindInstance(_screensConfig).NonLazy();
         }
     }
