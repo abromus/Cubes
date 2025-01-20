@@ -59,9 +59,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -85,6 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 316656640264704869}
   - component: {fileID: 3698923660488145130}
+  - component: {fileID: 1679581954457296938}
   - component: {fileID: 4810319686600081708}
   - component: {fileID: 1226619034054156029}
   m_Layer: 0
@@ -122,6 +123,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7836325895578385371}
   m_CullTransparentMesh: 1
+--- !u!225 &1679581954457296938
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7836325895578385371}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &4810319686600081708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rectTransform: {fileID: 316656640264704869}
+  _canvasGroup: {fileID: 1679581954457296938}
   _draggableImage: {fileID: 3841253307726228858}
   _draggableRectTransform: {fileID: 6433132794810901703}
 --- !u!114 &1226619034054156029

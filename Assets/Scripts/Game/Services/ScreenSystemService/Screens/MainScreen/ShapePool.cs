@@ -29,6 +29,17 @@
             return _pools[shapeType].Get();
         }
 
+        internal void Release(World.IShapePresenter shapePresenter)
+        {
+            var shapeType = shapePresenter.ShapeType;
+
+#if UNITY_EDITOR
+            UnityEngine.Assertions.Assert.IsTrue(_pools.ContainsKey(shapeType), $"[ShapeResolver]: Type {shapeType} not found");
+#endif
+
+            _pools[shapeType].Release(shapePresenter);
+        }
+
         private void InitPools()
         {
             var shapeTypeInfos = _config.ShapeTypeInfos;

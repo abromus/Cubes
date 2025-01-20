@@ -30,6 +30,10 @@
 
         public void UpdateDraggableParent(UnityEngine.Transform parent);
 
+        public void Show();
+
+        public void Hide();
+
         public void Destroy();
     }
 }

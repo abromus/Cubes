@@ -7,6 +7,7 @@ namespace Cubes.Game.World
     internal abstract class ShapeView : BaseShapeView, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         [SerializeField] private RectTransform _rectTransform;
+        [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private UnityEngine.UI.Image _draggableImage;
         [SerializeField] private RectTransform _draggableRectTransform;
 
@@ -60,6 +61,22 @@ namespace Cubes.Game.World
         public void UpdateDraggableParent(Transform parent)
         {
             _draggableRectTransform.SetParent(parent);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public void Show()
+        {
+            _canvasGroup.alpha = 1f;
+            _canvasGroup.blocksRaycasts = true;
+            _canvasGroup.interactable = true;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public void Hide()
+        {
+            _canvasGroup.alpha = 0f;
+            _canvasGroup.blocksRaycasts = false;
+            _canvasGroup.interactable = false;
         }
 
         public void OnBeginDrag(PointerEventData eventData)

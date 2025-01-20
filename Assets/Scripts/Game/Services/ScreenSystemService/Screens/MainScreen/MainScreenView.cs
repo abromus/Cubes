@@ -5,9 +5,11 @@ namespace Cubes.Game.Services
     internal sealed class MainScreenView : BaseScreenView
     {
         [UnityEngine.SerializeField] private UnityEngine.UI.Button _buttonSettings;
+        [UnityEngine.Space]
         [UnityEngine.SerializeField] private UnityEngine.RectTransform _shapesContainer;
         [UnityEngine.SerializeField] private UnityEngine.RectTransform _draggingShapeContainer;
-        [UnityEngine.SerializeField] private DroppedZone _holeZone;
+        [UnityEngine.SerializeField] private HoleDroppedZone _holeZone;
+        [UnityEngine.SerializeField] private DroppedZone _holeContainerZone;
         [UnityEngine.SerializeField] private DroppedZone _shapesStorageZone;
         [UnityEngine.SerializeField] private ShapesTower _tower;
         [UnityEngine.Space]
@@ -49,16 +51,39 @@ namespace Cubes.Game.Services
             Unsubscribe();
         }
 
+        internal override void Destroy()
+        {
+            _tower.Destroy();
+
+            base.Destroy();
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        internal bool ContainsInTower(World.IShapePresenter draggableShape)
+        {
+            return _tower.Contains(draggableShape);
+        }
+
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         internal void AddShapeToTower(World.IShapePresenter shapePresenter)
         {
             _tower.Add(shapePresenter);
         }
 
+        internal void RemoveShapeFromTower(World.IShapePresenter draggableShape)
+        {
+            _tower.Remove(draggableShape);
+        }
+
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         internal UnityEngine.Vector2 GetTowerSize()
         {
             return _tower.GetAvailableSize();
+        }
+
+        private void Awake()
+        {
+            _tower.Init(_draggingShapeContainer);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -77,7 +102,9 @@ namespace Cubes.Game.Services
         {
             _buttonSettings.OnClickAsObservable().Subscribe(OnButtonSettingsClicked).AddTo(_subscriptions);
             _holeZone.Dropped.Subscribe(OnHoleZoneDropped).AddTo(_subscriptions);
+            _holeContainerZone.Dropped.Subscribe(OnHoleContainerZoneDropped).AddTo(_subscriptions);
             _shapesStorageZone.Dropped.Subscribe(OnShapesStorageZoneDropped).AddTo(_subscriptions);
+            _tower.Dragging.Subscribe(OnTowerShapeDragging).AddTo(_subscriptions);
         }
 
         private void Unsubscribe()
@@ -93,13 +120,23 @@ namespace Cubes.Game.Services
             _presenter.ShowSettingsScreen();
         }
 
-        private void OnHoleZoneDropped(DroppedZone zone)
+        private void OnHoleZoneDropped(BaseDroppedZone zone)
+        {
+            _presenter.CheckHole();
+        }
+
+        private void OnHoleContainerZoneDropped(BaseDroppedZone zone)
         {
         }
 
-        private void OnShapesStorageZoneDropped(DroppedZone zone)
+        private void OnShapesStorageZoneDropped(BaseDroppedZone zone)
         {
             _presenter.ResolveShape(zone);
+        }
+
+        private void OnTowerShapeDragging(World.DraggableShapeInfo info)
+        {
+            _presenter.CheckDraggingShape(in info);
         }
     }
 }

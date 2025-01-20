@@ -11,17 +11,10 @@
             _restrictions.Add(new ContainerSizeRestriction(in containerSize));
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         internal bool Check(World.IShapePresenter shape)
         {
-            if (_shapes.Count == 0)
-                return true;
-
-            if (CheckRestrictions(shape) == false)
-                return false;
-
-            _shapes.Add(shape);
-
-            return true;
+            return _shapes.Count == 0 || CheckRestrictions(shape);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -32,6 +25,16 @@
 #endif
 
             _shapes.Add(shape);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        internal void RemoveShape(World.IShapePresenter shape)
+        {
+#if UNITY_EDITOR
+            UnityEngine.Assertions.Assert.IsTrue(_shapes.Contains(shape), $"[ShapeResolver]: Shape {shape} isn't contained");
+#endif
+
+            _shapes.Remove(shape);
         }
 
         private bool CheckRestrictions(World.IShapePresenter shape)

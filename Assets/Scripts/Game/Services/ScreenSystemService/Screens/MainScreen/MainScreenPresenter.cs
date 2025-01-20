@@ -55,7 +55,7 @@ namespace Cubes.Game.Services
             _view.Destroy();
         }
 
-        internal void ResolveShape(DroppedZone zone)
+        internal void ResolveShape(BaseDroppedZone zone)
         {
             var draggableShape = _model.DraggableShape;
 
@@ -63,20 +63,51 @@ namespace Cubes.Game.Services
             UnityEngine.Assertions.Assert.IsNotNull(draggableShape);
 #endif
 
-            if (_resolver.Check(draggableShape) == false)
+            if (_view.ContainsInTower(draggableShape) || _resolver.Check(draggableShape) == false)
                 return;
 
             var newShape = _pool.Get(draggableShape.ShapeType);
             newShape.Clone(draggableShape);
+            newShape.Show();
 
             _resolver.AddShape(newShape);
             _view.AddShapeToTower(newShape);
+        }
+
+        internal void CheckHole()
+        {
+            var draggableShape = _model.DraggableShape;
+
+            _pool.Release(draggableShape);
+            _resolver.RemoveShape(draggableShape);
+            _view.RemoveShapeFromTower(draggableShape);
+
+            draggableShape.Hide();
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         internal void ShowSettingsScreen()
         {
             _screenSystemService.Show(Configs.ScreenType.Settings);
+        }
+
+        internal void CheckDraggingShape(in World.DraggableShapeInfo info)
+        {
+            var isDragging = info.IsDragging;
+            var shapePresenter = info.ShapePresenter;
+
+            if (isDragging)
+            {
+                _model.UpdateDraggableShape(shapePresenter);
+
+                shapePresenter.UpdateDraggableParent(_view.DraggingShapeContainer);
+            }
+            else
+            {
+                _model.UpdateDraggableShape(null);
+
+                shapePresenter.UpdateDraggableParent(shapePresenter.RectTransform);
+            }
         }
 
         private void InitializeShapes()
@@ -143,21 +174,7 @@ namespace Cubes.Game.Services
 
         private void OnShapeDragging(World.DraggableShapeInfo info)
         {
-            var isDragging = info.IsDragging;
-            var shapePresenter = info.ShapePresenter;
-
-            if (isDragging)
-            {
-                _model.UpdateDraggableShape(shapePresenter);
-
-                shapePresenter.UpdateDraggableParent(_view.DraggingShapeContainer);
-            }
-            else
-            {
-                _model.UpdateDraggableShape(null);
-
-                shapePresenter.UpdateDraggableParent(shapePresenter.RectTransform);
-            }
+            CheckDraggingShape(in info);
         }
     }
 }

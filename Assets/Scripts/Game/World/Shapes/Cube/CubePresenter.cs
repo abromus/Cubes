@@ -85,6 +85,18 @@ namespace Cubes.Game.World
             _view.UpdateDraggableParent(parent);
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public override void Show()
+        {
+            _view.Show();
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public override void Hide()
+        {
+            _view.Hide();
+        }
+
         public override void Destroy()
         {
             _view.Destroy();
