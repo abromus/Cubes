@@ -9,10 +9,12 @@
         internal IShapePresenter Presenter => _presenter;
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public virtual void Init(IShapePresenter presenter, in Configs.ShapeInfo info)
+        public virtual void Init(IShapePresenter presenter)
         {
             _presenter = presenter;
         }
+
+        public abstract void UpdateConfig(in Configs.ShapeInfo info);
 
         internal virtual void Destroy()
         {

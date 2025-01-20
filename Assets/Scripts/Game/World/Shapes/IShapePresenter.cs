@@ -2,6 +2,10 @@
 {
     internal interface IShapePresenter
     {
+        public Configs.ShapeType ShapeType { get; }
+
+        public Configs.ShapeInfo Config { get; }
+
         public UnityEngine.Vector2 Position { get; }
 
         public UnityEngine.RectTransform RectTransform { get; }
@@ -12,7 +16,9 @@
 
         public UniRx.Subject<DraggableShapeInfo> Dragging { get; }
 
-        public void Init(IShapeModel model, BaseShapeView view, UnityEngine.RectTransform screenRectTransform);
+        public void Init(IShapeModel model, BaseShapeView view, UnityEngine.RectTransform screenRectTransform, in Configs.ShapeInfo info);
+
+        public void Clone(IShapePresenter clone);
 
         public void UpdatePosition(in UnityEngine.Vector2 position);
 

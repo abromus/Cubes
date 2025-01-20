@@ -25,6 +25,8 @@ namespace Cubes.Game.Services
 
         internal UnityEngine.RectTransform DraggingShapeContainer => _draggingShapeContainer;
 
+        internal UnityEngine.RectTransform TowerShapeContainer => _tower.ShapeContainer;
+
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public override void Init(IScreenPresenter presenter)
         {

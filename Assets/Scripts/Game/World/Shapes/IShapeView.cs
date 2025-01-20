@@ -2,6 +2,8 @@
 {
     internal interface IShapeView
     {
-        public void Init(IShapePresenter presenter, in Configs.ShapeInfo info);
+        public void Init(IShapePresenter presenter);
+
+        public void UpdateConfig(in Configs.ShapeInfo info);
     }
 }

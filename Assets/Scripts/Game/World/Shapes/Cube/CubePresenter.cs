@@ -7,10 +7,15 @@ namespace Cubes.Game.World
         private CubeModel _model;
         private CubeView _view;
         private UnityEngine.RectTransform _screenRectTransform;
-        private DraggableShapeInfo _info;
+        private Configs.ShapeInfo _config;
+        private DraggableShapeInfo _draggableShapeInfo;
 
         private readonly CompositeDisposable _subscriptions = new();
         private readonly Subject<DraggableShapeInfo> _dragging = new();
+
+        public override Configs.ShapeInfo Config => _config;
+
+        public override Configs.ShapeType ShapeType => _view.ShapeType;
 
         public override UnityEngine.Vector2 Position => _model.Position.Value;
 
@@ -22,22 +27,27 @@ namespace Cubes.Game.World
 
         public override Subject<DraggableShapeInfo> Dragging => _dragging;
 
-        public override void Init(IShapeModel model, BaseShapeView view, UnityEngine.RectTransform screenRectTransform)
+        public override void Init(IShapeModel model, BaseShapeView view, UnityEngine.RectTransform screenRectTransform, in Configs.ShapeInfo info)
         {
             _model = model as CubeModel;
             _view = view as CubeView;
             _screenRectTransform = screenRectTransform;
+            _config = info;
 
-            _info = new DraggableShapeInfo(this, false);
+            _draggableShapeInfo = new DraggableShapeInfo(this, false);
 
             Subscribe();
         }
 
-        public override void Destroy()
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public override void Clone(IShapePresenter clone)
         {
-            _view.Destroy();
+            _config = clone.Config;
 
-            Unsubscribe();
+            var position = clone.DraggableRectTransform.anchoredPosition;
+
+            _model.UpdatePosition(in position);
+            _view.UpdateConfig(_config);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -75,6 +85,13 @@ namespace Cubes.Game.World
             _view.UpdateDraggableParent(parent);
         }
 
+        public override void Destroy()
+        {
+            _view.Destroy();
+
+            Unsubscribe();
+        }
+
         private void Subscribe()
         {
             _model.Position.Subscribe(OnUpdatePosition).AddTo(_subscriptions);
@@ -102,8 +119,8 @@ namespace Cubes.Game.World
 
         private void OnDragging(bool isDragging)
         {
-            _info.SetDragging(isDragging);
-            _dragging.OnNext(_info);
+            _draggableShapeInfo.SetDragging(isDragging);
+            _dragging.OnNext(_draggableShapeInfo);
         }
     }
 }

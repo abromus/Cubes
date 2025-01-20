@@ -1,5 +1,4 @@
-﻿using Cubes.Game.Configs;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Cubes.Game.World
@@ -24,13 +23,17 @@ namespace Cubes.Game.World
 
         internal UniRx.Subject<bool> Dragging => _dragging;
 
-        public override void Init(IShapePresenter presenter, in ShapeInfo info)
+        public override void Init(IShapePresenter presenter)
         {
-            base.Init(presenter, info);
+            base.Init(presenter);
 
             _anchorMin = _rectTransform.anchorMin;
             _anchorMax = _rectTransform.anchorMax;
+        }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public override void UpdateConfig(in Configs.ShapeInfo info)
+        {
             _draggableImage.color = info.Color;
         }
 

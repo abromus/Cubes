@@ -15,14 +15,18 @@ namespace Cubes.Game.Factories
         {
             var shapeTypeInfos = _shapesConfig.ShapeTypeInfos;
 
-            foreach (var shapeTypeInfo in shapeTypeInfos)
+            for (int i = 0; i < shapeTypeInfos.Length; i++)
+            {
+                var shapeTypeInfo = shapeTypeInfos[i];
+
                 _viewPrefabs.Add(shapeTypeInfo.Type, shapeTypeInfo.Prefab);
+            }
         }
 
         internal bool TryCreate(
-            in Configs.ShapeInfo info,
             UnityEngine.RectTransform parent,
             UnityEngine.RectTransform screenRectTransform,
+            in Configs.ShapeInfo info,
             out IShapePresenter presenter)
         {
             presenter = null;
@@ -37,7 +41,31 @@ namespace Cubes.Game.Factories
             switch (type)
             {
                 case Configs.ShapeType.Cube:
-                    presenter = Create<CubeModel, CubeView, CubePresenter>(in info, viewPrefab, parent, screenRectTransform);
+                    presenter = Create<CubeModel, CubeView, CubePresenter>(viewPrefab, parent, screenRectTransform, in info);
+
+                    return true;
+            }
+
+            return false;
+        }
+
+        internal bool TryCreate(
+            UnityEngine.RectTransform parent,
+            UnityEngine.RectTransform screenRectTransform,
+            Configs.ShapeType type,
+            out IShapePresenter presenter)
+        {
+            presenter = null;
+
+            if (_viewPrefabs.ContainsKey(type) == false)
+                return false;
+
+            var viewPrefab = _viewPrefabs[type];
+
+            switch (type)
+            {
+                case Configs.ShapeType.Cube:
+                    presenter = Create<CubeModel, CubeView, CubePresenter>(viewPrefab, parent, screenRectTransform);
 
                     return true;
             }
@@ -46,10 +74,10 @@ namespace Cubes.Game.Factories
         }
 
         private IShapePresenter Create<TModel, TView, TPresenter>(
-            in Configs.ShapeInfo info,
             BaseShapeView viewPrefab,
             UnityEngine.Transform parent,
-            UnityEngine.RectTransform screenRectTransform)
+            UnityEngine.RectTransform screenRectTransform,
+            in Configs.ShapeInfo info = default)
             where TModel : IShapeModel, new()
             where TView : BaseShapeView
             where TPresenter : IShapePresenter, new()
@@ -58,8 +86,9 @@ namespace Cubes.Game.Factories
             var view = _diContainer.InstantiatePrefabForComponent<BaseShapeView>(viewPrefab, parent);
             var presenter = _diContainer.Resolve<TPresenter>();
 
-            presenter.Init(model, view, screenRectTransform);
-            view.Init(presenter, in info);
+            presenter.Init(model, view, screenRectTransform, in info);
+            view.Init(presenter);
+            view.UpdateConfig(in info);
 
             return presenter;
         }

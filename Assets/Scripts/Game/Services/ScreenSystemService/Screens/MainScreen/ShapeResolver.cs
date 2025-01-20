@@ -11,16 +11,12 @@
             _restrictions.Add(new ContainerSizeRestriction(in containerSize));
         }
 
-        internal bool TryAddShape(World.IShapePresenter shape)
+        internal bool Check(World.IShapePresenter shape)
         {
             if (_shapes.Count == 0)
-            {
-                _shapes.Add(shape);
-
                 return true;
-            }
 
-            if (_shapes.Contains(shape) || CanAddShape(shape) == false)
+            if (CheckRestrictions(shape) == false)
                 return false;
 
             _shapes.Add(shape);
@@ -28,7 +24,17 @@
             return true;
         }
 
-        private bool CanAddShape(World.IShapePresenter shape)
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        internal void AddShape(World.IShapePresenter shape)
+        {
+#if UNITY_EDITOR
+            UnityEngine.Assertions.Assert.IsFalse(_shapes.Contains(shape), $"[ShapeResolver]: Already contains shape {shape}");
+#endif
+
+            _shapes.Add(shape);
+        }
+
+        private bool CheckRestrictions(World.IShapePresenter shape)
         {
             var minShapes = 1;
 
@@ -40,7 +46,7 @@
             for (int i = 0; i < _restrictions.Count; i++)
             {
                 var restriction = _restrictions[i];
-                
+
                 if (restriction.Check(lastShape, shape) == false)
                     return false;
             }

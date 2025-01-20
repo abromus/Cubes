@@ -5,13 +5,19 @@
         [UnityEngine.SerializeField] private UnityEngine.RectTransform _rectTransform;
         [UnityEngine.SerializeField] private UnityEngine.RectTransform _startPosition;
 
+        private float _halfWidth;
         private float _startPositionY;
+        private UnityEngine.Vector2 _shapePosition;
 
         private readonly System.Collections.Generic.List<World.IShapePresenter> _shapes = new(32);
 
+        internal UnityEngine.RectTransform ShapeContainer => _rectTransform;
+
         private void Awake()
         {
+            _halfWidth = _rectTransform.rect.width * Constants.Half;
             _startPositionY = _startPosition.anchoredPosition.y;
+            _shapePosition = UnityEngine.Vector2.zero;
         }
 
         internal void Add(World.IShapePresenter shape)
@@ -34,25 +40,25 @@
 
         private UnityEngine.Vector2 GetShapePosition(World.IShapePresenter shape)
         {
-            var shapeRectTransform = shape.DraggableRectTransform;
-            var shapeHeight = shapeRectTransform.rect.height;
+            var shapeRect = shape.DraggableRectTransform.rect;
+            var shapeHeight = shapeRect.height;
+            var halfShapeWidth = shapeRect.width * Constants.Half;
 
             if (_shapes.Count == 0)
             {
-                var screenPoint = UnityEngine.RectTransformUtility.WorldToScreenPoint(null, shape.DraggableRectTransform.position);
+                _shapePosition.x = shape.RectTransform.anchoredPosition.x - _halfWidth;
+                _shapePosition.y = _startPositionY + shapeHeight * Constants.Half;
 
-                UnityEngine.RectTransformUtility.ScreenPointToLocalPointInRectangle(_rectTransform, screenPoint, null, out var position);
-
-                position.y = _startPositionY + shapeHeight * Constants.Half;
-
-                return position;
+                return _shapePosition;
             }
 
             var lastShape = _shapes[^1];
-            var shapePosition = lastShape.RectTransform.anchoredPosition;
-            shapePosition.y += shapeHeight;
 
-            return shapePosition;
+            _shapePosition = lastShape.RectTransform.anchoredPosition;
+            _shapePosition.x += UnityEngine.Random.Range(-halfShapeWidth, halfShapeWidth);
+            _shapePosition.y += shapeHeight;
+
+            return _shapePosition;
         }
     }
 }

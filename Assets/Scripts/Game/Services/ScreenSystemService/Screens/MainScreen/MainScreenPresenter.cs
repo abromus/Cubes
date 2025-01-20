@@ -7,6 +7,7 @@ namespace Cubes.Game.Services
         private MainScreenModel _model;
         private MainScreenView _view;
         private ShapeResolver _resolver;
+        private ShapePool _pool;
 
         private ScreenSystemService _screenSystemService;
         private Factories.ShapeFactory _factory;
@@ -32,6 +33,7 @@ namespace Cubes.Game.Services
 
             InitializeShapes();
             InitializeResolver();
+            InitializePool();
         }
 
         public override void Show()
@@ -61,10 +63,14 @@ namespace Cubes.Game.Services
             UnityEngine.Assertions.Assert.IsNotNull(draggableShape);
 #endif
 
-            if (_resolver.TryAddShape(draggableShape) == false)
+            if (_resolver.Check(draggableShape) == false)
                 return;
 
-            _view.AddShapeToTower(_model.DraggableShape);
+            var newShape = _pool.Get(draggableShape.ShapeType);
+            newShape.Clone(draggableShape);
+
+            _resolver.AddShape(newShape);
+            _view.AddShapeToTower(newShape);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -82,10 +88,10 @@ namespace Cubes.Game.Services
                 var info = shapeInfos[i];
                 var type = info.Type;
 
-                if (_factory.TryCreate(in info, _view.ShapesContainer, _view.RectTransform, out var shapePresenter) == false)
+                if (_factory.TryCreate(_view.ShapesContainer, _view.RectTransform, in info, out var shapePresenter) == false)
                 {
 #if UNITY_EDITOR
-                    UnityEngine.Debug.LogError($"[ScreenSystemService]: Can't create shape {type}");
+                    UnityEngine.Debug.LogError($"[MainScreenPresenter]: Can't create shape {type}");
 #endif
                 }
 
@@ -100,6 +106,17 @@ namespace Cubes.Game.Services
             var towerSize = _view.GetTowerSize();
 
             _resolver = new(in towerSize);
+        }
+
+        private void InitializePool()
+        {
+            var args = new ShapePoolArgs(
+                _factory,
+                _config,
+                _view.TowerShapeContainer,
+                _view.RectTransform);
+
+            _pool = new(in args);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]

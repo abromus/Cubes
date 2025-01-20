@@ -31,7 +31,7 @@ namespace Cubes.Core.Services
             while (asyncOperation.isDone == false)
             {
 #if UNITY_EDITOR
-                UnityEngine.Debug.Log($"Прогресс загрузки: {asyncOperation.progress * 100}%");
+                UnityEngine.Debug.Log($"[SceneLoader]: Progress: {asyncOperation.progress * 100}%");
 #endif
 
                 if (progressSceneActivation <= asyncOperation.progress)
@@ -59,7 +59,7 @@ namespace Cubes.Core.Services
         private void OnSuccess(Unit _)
         {
 #if UNITY_EDITOR
-            UnityEngine.Debug.Log($"Сцена {_info.SceneName} успешно загружена!");
+            UnityEngine.Debug.Log($"[SceneLoader]: Scene {_info.SceneName} loaded successfully");
 #endif
 
             _info.Success?.Invoke();
@@ -67,7 +67,7 @@ namespace Cubes.Core.Services
 
         private void OnError(System.Exception exception)
         {
-            UnityEngine.Debug.LogError($"Ошибка при загрузке сцены {_info.SceneName}: {exception.Message}");
+            UnityEngine.Debug.LogError($"[SceneLoader]: Error loading scene {_info.SceneName}: {exception.Message}");
         }
     }
 }
