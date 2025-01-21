@@ -6,6 +6,7 @@ namespace Cubes.Game.Factories
     {
         [Zenject.Inject] private readonly Zenject.DiContainer _diContainer;
         [Zenject.Inject] private readonly Configs.ScreensConfig _screensConfig;
+        [Zenject.Inject] private readonly LocalizeService _localizeService;
 
         private readonly System.Collections.Generic.Dictionary<Configs.ScreenType, BaseScreenView> _viewPrefabs = new(8);
 
@@ -57,7 +58,7 @@ namespace Cubes.Game.Factories
             var presenter = _diContainer.Resolve<TPresenter>();
 
             presenter.Init(model, view);
-            view.Init(presenter);
+            view.Init(presenter, _localizeService);
 
             return presenter;
         }

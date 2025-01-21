@@ -5,14 +5,12 @@
         [UnityEngine.SerializeField] private UnityEngine.RectTransform _rectTransform;
         [UnityEngine.SerializeField] private UnityEngine.CanvasGroup _canvasGroup;
 
-        private IScreenPresenter _presenter;
-
         internal abstract Configs.ScreenType ScreenType { get; }
 
         internal UnityEngine.RectTransform RectTransform => _rectTransform;
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public abstract void Init(IScreenPresenter presenter);
+        public abstract void Init(IScreenPresenter presenter, LocalizeService localizeService);
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         internal virtual void Show()

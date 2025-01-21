@@ -31,9 +31,10 @@ namespace Cubes.Game.Services
         internal UnityEngine.RectTransform TowerShapeContainer => _tower.ShapeContainer;
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public override void Init(IScreenPresenter presenter)
+        public override void Init(IScreenPresenter presenter, LocalizeService localizeService)
         {
             _presenter = presenter as MainScreenPresenter;
+            _commentator.Init(localizeService);
         }
 
         internal override void Show()

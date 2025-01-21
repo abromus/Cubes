@@ -9,18 +9,20 @@ namespace Cubes.Game.Services
         [UnityEngine.Space]
         [UnityEngine.SerializeField] private UnityEngine.AudioClip _backgroundMusic;
 
-        [Zenject.Inject] private readonly AudioService _audioService;
-
         private GameOverScreenPresenter _presenter;
+        private LocalizeService _localizeService;
+
+        [Zenject.Inject] private readonly AudioService _audioService;
 
         private readonly CompositeDisposable _subscriptions = new();
 
         internal override Configs.ScreenType ScreenType => Configs.ScreenType.GameOver;
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public override void Init(IScreenPresenter presenter)
+        public override void Init(IScreenPresenter presenter, LocalizeService localizeService)
         {
             _presenter = presenter as GameOverScreenPresenter;
+            _localizeService = localizeService;
         }
 
         internal override void Show()

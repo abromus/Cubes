@@ -30,6 +30,8 @@
             Container.Bind<Services.GameLoopState>().AsSingle();
             Container.Bind<Services.GameOverState>().AsSingle();
             Container.Bind<Services.GameExitState>().AsSingle();
+
+            Container.Bind<Services.LocalizeService>().AsSingle();
         }
 
         private void InstallUiPrefabServices()

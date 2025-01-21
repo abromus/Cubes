@@ -12,6 +12,14 @@
         [UnityEngine.SerializeField] private string _intersectionRestrictionKey;
         [UnityEngine.SerializeField] private string _containerSizeRestrictionKey;
 
+        private LocalizeService _localizeService;
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        internal void Init(LocalizeService localizeService)
+        {
+            _localizeService = localizeService;
+        }
+
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         internal void ShowAddShapeToTowerMessage()
         {
@@ -40,7 +48,14 @@
                 ShowMessage(_containerSizeRestrictionKey);
         }
 
-        private void ShowMessage(string message)
+        private void ShowMessage(string key)
+        {
+            var message = _localizeService.Localize(key);
+
+            ShowLocalizedMessage(message);
+        }
+
+        private void ShowLocalizedMessage(string message)
         {
             _tooltip.SetText(message);
             _tooltip.FadeIn();
