@@ -8,8 +8,11 @@ namespace Cubes.Game.World
     {
         [SerializeField] private RectTransform _rectTransform;
         [SerializeField] private CanvasGroup _canvasGroup;
+        [SerializeField] private UnityEngine.UI.Image _image;
         [SerializeField] private UnityEngine.UI.Image _draggableImage;
         [SerializeField] private RectTransform _draggableRectTransform;
+        [SerializeField][Range(0f, 1f)] private float _beginDragAlpha;
+        [SerializeField][Range(0f, 1f)] private float _endDragAlpha;
 
         private bool _isDragging = false;
         private Vector2 _anchorMin;
@@ -35,6 +38,7 @@ namespace Cubes.Game.World
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public override void UpdateConfig(in Configs.ShapeInfo info)
         {
+            _image.color = info.Color;
             _draggableImage.color = info.Color;
         }
 
@@ -83,6 +87,8 @@ namespace Cubes.Game.World
         {
             _isDragging = true;
 
+            ChangeAlpha(_beginDragAlpha);
+
             _dragging.OnNext(_isDragging);
         }
 
@@ -98,9 +104,18 @@ namespace Cubes.Game.World
         {
             _isDragging = false;
 
+            ChangeAlpha(_endDragAlpha);
+
             _dragging.OnNext(_isDragging);
 
             Presenter.UpdateDraggablePosition(in _zero);
+        }
+
+        private void ChangeAlpha(float alpha)
+        {
+            var color = _draggableImage.color;
+            color.a = alpha;
+            _draggableImage.color = color;
         }
     }
 }

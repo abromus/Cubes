@@ -49,7 +49,7 @@ CanvasGroup:
   m_Enabled: 1
   m_Alpha: 1
   m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &2359680958617525250
 MonoBehaviour:
@@ -68,6 +68,7 @@ MonoBehaviour:
   _message: {fileID: 969891370549351911}
   _fadeInDuration: 1.5
   _fadeOutDuration: 0.5
+  _fadeOutDelay: 1
 --- !u!1 &5137703290528376570
 GameObject:
   m_ObjectHideFlags: 0

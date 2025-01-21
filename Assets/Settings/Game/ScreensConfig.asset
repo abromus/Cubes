@@ -15,4 +15,3 @@ MonoBehaviour:
   _screens:
   - {fileID: 6187853245695575874, guid: d3f7dd133ac805a489a8a68358ea9359, type: 3}
   - {fileID: 5359204536321395510, guid: 2a36cd79f7c2171408c52d724c51fb48, type: 3}
-  - {fileID: 3058239238229914590, guid: be24ae7c4cdef2d49952735c30efd2fb, type: 3}

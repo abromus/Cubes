@@ -9,6 +9,7 @@ namespace Cubes.Game.Services
         [UnityEngine.SerializeField] private TMPro.TMP_Text _message;
         [UnityEngine.SerializeField] private float _fadeInDuration;
         [UnityEngine.SerializeField] private float _fadeOutDuration;
+        [UnityEngine.SerializeField] private float _fadeOutDelay;
 
         private Sequence _sequence;
 
@@ -28,7 +29,7 @@ namespace Cubes.Game.Services
             _canvasGroup.interactable = true;
 
             _sequence = DOTween.Sequence()
-                .Append(_canvasGroup.DOFade(0f, _fadeInDuration).SetEase(Ease.InQuad))
+                .Append(_canvasGroup.DOFade(1f, _fadeInDuration).SetEase(Ease.InQuad))
                 .OnComplete(FadeOut);
         }
 
@@ -52,6 +53,7 @@ namespace Cubes.Game.Services
             KillAnimation();
 
             _sequence = DOTween.Sequence()
+                .AppendInterval(_fadeOutDelay)
                 .Append(_canvasGroup.DOFade(0f, _fadeOutDuration))
                 .OnComplete(Hide);
         }

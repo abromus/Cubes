@@ -14,7 +14,6 @@ namespace Cubes.Game
             _stateMachine.Add(new Services.GameInitializationState(_stateMachine, _world));
             _stateMachine.Add(new Services.GameRestartState(_stateMachine, _world));
             _stateMachine.Add(new Services.GameLoopState());
-            _stateMachine.Add(new Services.GameOverState(_audioService, _screenSystemService));
             _stateMachine.Add(new Services.GameExitState());
         }
 

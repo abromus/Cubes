@@ -39,10 +39,6 @@ namespace Cubes.Game.Factories
                     presenter = Create<SettingsScreenModel, SettingsScreenView, SettingsScreenPresenter>(viewPrefab, parent);
 
                     return true;
-                case Configs.ScreenType.GameOver:
-                    presenter = Create<GameOverScreenModel, GameOverScreenView, GameOverScreenPresenter>(viewPrefab, parent);
-
-                    return true;
             }
 
             return false;

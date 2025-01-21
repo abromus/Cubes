@@ -40,12 +40,6 @@ namespace Cubes.Game.World
             _screenSystemService.Show(Configs.ScreenType.Main);
         }
 
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        private void GameOver()
-        {
-            _stateMachine.Enter<GameOverState>();
-        }
-
         private void Subscribe()
         {
         }

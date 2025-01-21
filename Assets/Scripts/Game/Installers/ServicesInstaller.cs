@@ -28,7 +28,6 @@
             Container.Bind<Services.GameInitializationState>().AsSingle();
             Container.Bind<Services.GameRestartState>().AsSingle();
             Container.Bind<Services.GameLoopState>().AsSingle();
-            Container.Bind<Services.GameOverState>().AsSingle();
             Container.Bind<Services.GameExitState>().AsSingle();
 
             Container.Bind<Services.LocalizeService>().AsSingle();
@@ -45,7 +44,6 @@
         {
             Container.BindInterfacesAndSelfTo<Services.MainScreenModel>().AsTransient();
             Container.BindInterfacesAndSelfTo<Services.SettingsScreenModel>().AsTransient();
-            Container.BindInterfacesAndSelfTo<Services.GameOverScreenModel>().AsTransient();
         }
 
         private void InstallViews()
@@ -64,7 +62,6 @@
         {
             Container.BindInterfacesAndSelfTo<Services.MainScreenPresenter>().AsTransient();
             Container.BindInterfacesAndSelfTo<Services.SettingsScreenPresenter>().AsTransient();
-            Container.BindInterfacesAndSelfTo<Services.GameOverScreenPresenter>().AsTransient();
         }
     }
 }
