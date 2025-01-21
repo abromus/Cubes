@@ -3,12 +3,15 @@
     internal sealed class MainScreenModel : IScreenModel
     {
         private World.IShapePresenter _draggableShape;
+        private DragSource _dragSource;
 
         private readonly System.Collections.Generic.List<World.IShapePresenter> _shapes = new(32);
 
         internal UniRx.ReactiveProperty<bool> IsShown { get; private set; }
 
         internal World.IShapePresenter DraggableShape => _draggableShape;
+
+        internal DragSource DragSource => _dragSource;
 
         [UnityEngine.Scripting.Preserve]
         public MainScreenModel()
@@ -29,9 +32,10 @@
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        internal void UpdateDraggableShape(World.IShapePresenter draggableShape)
+        internal void UpdateDraggableShape(World.IShapePresenter draggableShape, DragSource dragSource)
         {
             _draggableShape = draggableShape;
+            _dragSource = dragSource;
         }
     }
 }

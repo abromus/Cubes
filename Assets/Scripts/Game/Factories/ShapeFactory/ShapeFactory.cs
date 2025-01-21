@@ -27,6 +27,7 @@ namespace Cubes.Game.Factories
             UnityEngine.RectTransform parent,
             UnityEngine.RectTransform screenRectTransform,
             in Configs.ShapeInfo info,
+            Services.DragSource dragSource,
             out IShapePresenter presenter)
         {
             presenter = null;
@@ -41,7 +42,7 @@ namespace Cubes.Game.Factories
             switch (type)
             {
                 case Configs.ShapeType.Cube:
-                    presenter = Create<CubeModel, CubeView, CubePresenter>(viewPrefab, parent, screenRectTransform, in info);
+                    presenter = Create<CubeModel, CubeView, CubePresenter>(viewPrefab, parent, screenRectTransform, dragSource, in info);
 
                     return true;
             }
@@ -53,6 +54,7 @@ namespace Cubes.Game.Factories
             UnityEngine.RectTransform parent,
             UnityEngine.RectTransform screenRectTransform,
             Configs.ShapeType type,
+            Services.DragSource dragSource,
             out IShapePresenter presenter)
         {
             presenter = null;
@@ -65,7 +67,7 @@ namespace Cubes.Game.Factories
             switch (type)
             {
                 case Configs.ShapeType.Cube:
-                    presenter = Create<CubeModel, CubeView, CubePresenter>(viewPrefab, parent, screenRectTransform);
+                    presenter = Create<CubeModel, CubeView, CubePresenter>(viewPrefab, parent, screenRectTransform, dragSource);
 
                     return true;
             }
@@ -77,6 +79,7 @@ namespace Cubes.Game.Factories
             BaseShapeView viewPrefab,
             UnityEngine.Transform parent,
             UnityEngine.RectTransform screenRectTransform,
+            Services.DragSource dragSource,
             in Configs.ShapeInfo info = default)
             where TModel : IShapeModel, new()
             where TView : BaseShapeView
@@ -86,7 +89,7 @@ namespace Cubes.Game.Factories
             var view = _diContainer.InstantiatePrefabForComponent<BaseShapeView>(viewPrefab, parent);
             var presenter = _diContainer.Resolve<TPresenter>();
 
-            presenter.Init(model, view, screenRectTransform, in info);
+            presenter.Init(model, view, screenRectTransform, dragSource, in info);
             view.Init(presenter);
             view.UpdateConfig(in info);
 

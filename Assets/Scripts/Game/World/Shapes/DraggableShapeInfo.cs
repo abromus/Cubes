@@ -5,15 +5,19 @@
     {
         private bool _isDragging;
 
+        private readonly Services.DragSource _dragSource;
         private readonly IShapePresenter _shapePresenter;
 
         internal readonly IShapePresenter ShapePresenter => _shapePresenter;
 
+        internal readonly Services.DragSource DragSource => _dragSource;
+
         internal readonly bool IsDragging => _isDragging;
 
-        internal DraggableShapeInfo(IShapePresenter shapePresenter, bool isDragging)
+        internal DraggableShapeInfo(IShapePresenter shapePresenter, Services.DragSource dragSource, bool isDragging)
         {
             _shapePresenter = shapePresenter;
+            _dragSource = dragSource;
             _isDragging = isDragging;
         }
 

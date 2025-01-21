@@ -3,8 +3,6 @@ namespace Cubes.Game
     internal sealed class GameSceneController : UnityEngine.MonoBehaviour
     {
         [Zenject.Inject] private readonly Core.Services.StateMachine _stateMachine;
-        [Zenject.Inject] private readonly Services.AudioService _audioService;
-        [Zenject.Inject] private readonly Services.ScreenSystemService _screenSystemService;
         [Zenject.Inject] private readonly World.World _world;
 
         [Zenject.Inject]

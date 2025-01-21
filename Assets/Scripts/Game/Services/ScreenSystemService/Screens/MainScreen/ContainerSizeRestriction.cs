@@ -13,7 +13,7 @@
         {
             var shapeRectTransform = shape.DraggableRectTransform;
             var shapeHeight = shapeRectTransform.rect.height;
-            var shapePositionY = lastShape.RectTransform.anchoredPosition.y;
+            var shapePositionY = lastShape.Position.y;
             var containerHeight = _size.y;
             shapePositionY += shapeHeight + containerHeight * Constants.Half;
 

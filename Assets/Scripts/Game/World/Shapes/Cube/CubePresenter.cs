@@ -27,14 +27,20 @@ namespace Cubes.Game.World
 
         public override Subject<DraggableShapeInfo> Dragging => _dragging;
 
-        public override void Init(IShapeModel model, BaseShapeView view, UnityEngine.RectTransform screenRectTransform, in Configs.ShapeInfo info)
+        public override void Init(
+            IShapeModel model,
+            BaseShapeView view,
+            UnityEngine.RectTransform screenRectTransform,
+            Services.DragSource dragSource,
+            in Configs.ShapeInfo info)
         {
             _model = model as CubeModel;
             _view = view as CubeView;
             _screenRectTransform = screenRectTransform;
             _config = info;
 
-            _draggableShapeInfo = new DraggableShapeInfo(this, false);
+            _model.UpdateDragSource(dragSource);
+            _draggableShapeInfo = new DraggableShapeInfo(this, _model.DragSource, false);
 
             Subscribe();
         }
@@ -86,15 +92,50 @@ namespace Cubes.Game.World
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public override void UpdateDragSource(Services.DragSource dragSource)
+        {
+            _model.UpdateDragSource(dragSource);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public override void Jump(in UnityEngine.Vector2 startPosition, in UnityEngine.Vector2 targetPosition)
+        {
+            _view.Jump(in startPosition, in targetPosition);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public override void Move(in UnityEngine.Vector2 startPosition, in UnityEngine.Vector2 targetPosition, float delay = 0f)
+        {
+            _view.Move(in startPosition, in targetPosition, delay);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public override void Explode(in ExplodeAnimationArgs args)
+        {
+            _view.Explode(in args);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public override void Show()
         {
             _view.Show();
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public override void Hide()
+        public override void Hide(HideAnimationType type = HideAnimationType.Force)
         {
-            _view.Hide();
+            switch (type)
+            {
+                case HideAnimationType.Force:
+                    _view.Hide();
+                    break;
+                case HideAnimationType.FadeOut:
+                    _view.FadeOut();
+                    break;
+                default:
+                    _view.Hide();
+                    break;
+            }
         }
 
         public override void Destroy()

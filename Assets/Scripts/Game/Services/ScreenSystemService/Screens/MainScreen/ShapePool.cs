@@ -8,6 +8,7 @@
         private readonly UnityEngine.RectTransform _screenRectTransform;
 
         private readonly System.Collections.Generic.Dictionary<Configs.ShapeType, Core.IObjectPool<World.IShapePresenter>> _pools = new(8);
+        private readonly System.Collections.Generic.Dictionary<Configs.ShapeType, System.Collections.Generic.List<World.IShapePresenter>> _shapes = new(8);
 
         internal ShapePool(in ShapePoolArgs args)
         {
@@ -26,7 +27,14 @@
             UnityEngine.Assertions.Assert.IsTrue(_pools.ContainsKey(shapeType), $"[ShapeResolver]: Type {shapeType} not found");
 #endif
 
-            return _pools[shapeType].Get();
+            var shapePresenter = _pools[shapeType].Get();
+
+            if (_shapes.ContainsKey(shapeType))
+                _shapes[shapeType].Add(shapePresenter);
+            else
+                _shapes.Add(shapeType, new(32) { shapePresenter });
+
+            return shapePresenter;
         }
 
         internal void Release(World.IShapePresenter shapePresenter)
@@ -38,6 +46,27 @@
 #endif
 
             _pools[shapeType].Release(shapePresenter);
+            _shapes[shapeType].Remove(shapePresenter);
+        }
+
+        internal void Destroy()
+        {
+            var shapes = _shapes.Values;
+
+            foreach (var currentShapes in shapes)
+            {
+                var count = currentShapes.Count;
+
+                for (int i = count - 1; 0 < i + 1; i--)
+                {
+                    var shape = currentShapes[i];
+                    var shapeType = shape.ShapeType;
+                    shape.Destroy();
+
+                    _pools[shapeType].Release(shape);
+                    _shapes[shapeType].Remove(shape);
+                }
+            }
         }
 
         private void InitPools()
@@ -63,7 +92,9 @@
 
         private World.IShapePresenter CreateShape(Configs.ShapeType shapeType)
         {
-            if (_factory.TryCreate(_parent, _screenRectTransform, shapeType, out var shapePresenter) == false)
+            var dragSource = DragSource.FromTower;
+
+            if (_factory.TryCreate(_parent, _screenRectTransform, shapeType, dragSource, out var shapePresenter) == false)
             {
 #if UNITY_EDITOR
                 UnityEngine.Debug.LogError($"[ShapePool]: Can't create shape {shapeType}");

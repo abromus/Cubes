@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 namespace Cubes.Game.World
 {
@@ -13,6 +14,8 @@ namespace Cubes.Game.World
         [SerializeField] private RectTransform _draggableRectTransform;
         [SerializeField][Range(0f, 1f)] private float _beginDragAlpha;
         [SerializeField][Range(0f, 1f)] private float _endDragAlpha;
+        [SerializeField] private float _fadeOutDuration;
+        [SerializeField] private ShapeAnimator _animator;
 
         private bool _isDragging = false;
         private Vector2 _anchorMin;
@@ -68,6 +71,24 @@ namespace Cubes.Game.World
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public void Jump(in Vector2 startPosition, in Vector2 targetPosition)
+        {
+            _animator.Jump(in startPosition, in targetPosition);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public void Move(in Vector2 startPosition, in Vector2 targetPosition, float delay)
+        {
+            _animator.Move(in startPosition, in targetPosition, delay);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public void Explode(in ExplodeAnimationArgs args)
+        {
+            _animator.Explode(in args);
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public void Show()
         {
             _canvasGroup.alpha = 1f;
@@ -78,9 +99,21 @@ namespace Cubes.Game.World
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public void Hide()
         {
+            _animator.Stop();
+
             _canvasGroup.alpha = 0f;
             _canvasGroup.blocksRaycasts = false;
             _canvasGroup.interactable = false;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        public void FadeOut()
+        {
+            _animator.Stop();
+
+            DOTween.Sequence()
+                .Append(_canvasGroup.DOFade(0f, _fadeOutDuration))
+                .OnComplete(Hide);
         }
 
         public void OnBeginDrag(PointerEventData eventData)

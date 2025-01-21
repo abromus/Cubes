@@ -66,12 +66,17 @@ namespace Cubes.Game.Services
             return _tower.Contains(draggableShape);
         }
 
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        internal void AddShapeToTower(World.IShapePresenter shapePresenter)
+        internal void AddShapeToTower(World.IShapePresenter shapePresenter, in UnityEngine.Vector2 startPosition)
         {
-            _tower.Add(shapePresenter);
+            _tower.Add(shapePresenter, in startPosition);
 
             _commentator.ShowAddShapeToTowerMessage();
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        internal void ExplodeShape(World.IShapePresenter shapePresenter, in UnityEngine.Vector2 startPosition, System.Action callback)
+        {
+            _tower.Explode(shapePresenter, in startPosition, callback);
         }
 
         internal void RemoveShapeFromTower(World.IShapePresenter draggableShape)
@@ -87,7 +92,7 @@ namespace Cubes.Game.Services
 
         private void Awake()
         {
-            _tower.Init(_draggingShapeContainer);
+            _tower.Init();
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -126,9 +131,8 @@ namespace Cubes.Game.Services
 
         private void OnHoleZoneDropped(BaseDroppedZone zone)
         {
-            _commentator.ShowDroppedOnHoleMessage();
-
-            _presenter.CheckHole();
+            if (_presenter.CheckHole())
+                _commentator.ShowDroppedOnHoleMessage();
         }
 
         private void OnHoleContainerZoneDropped(BaseDroppedZone zone)
@@ -138,7 +142,7 @@ namespace Cubes.Game.Services
 
         private void OnShapesStorageZoneDropped(BaseDroppedZone zone)
         {
-            var status = _presenter.ResolveShape(zone);
+            var status = _presenter.ResolveShape();
 
             _commentator.ShowResolverMessage(status);
         }

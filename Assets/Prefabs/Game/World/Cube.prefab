@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 1679581954457296938}
   - component: {fileID: 4810319686600081708}
   - component: {fileID: 1226619034054156029}
+  - component: {fileID: 8819189392508766525}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -154,6 +155,8 @@ MonoBehaviour:
   _draggableRectTransform: {fileID: 6433132794810901703}
   _beginDragAlpha: 0.5
   _endDragAlpha: 0
+  _fadeOutDuration: 0.25
+  _animator: {fileID: 8819189392508766525}
 --- !u!114 &1226619034054156029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,3 +187,28 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8819189392508766525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7836325895578385371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf5366f2ad53ee4ab437ac6aab87f0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rectTransform: {fileID: 316656640264704869}
+  _moveDuration: 1
+  _moveDelay: 0.25
+  _jumpDuration: 1
+  _jumpPower: 250
+  _jumpCount: 1
+  _explodeMoveDuration: 1
+  _explodeJumpPower: 250
+  _explodeJumpCount: 1
+  _explodeFallDuration: 0.5
+  _explodeShakeDuration: 0.25
+  _explodeShakeStrength: {x: 0, y: 0, z: 15}
+  _explodeShakeVibrato: 35

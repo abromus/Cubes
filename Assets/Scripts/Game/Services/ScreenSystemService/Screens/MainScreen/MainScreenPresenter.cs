@@ -52,35 +52,35 @@ namespace Cubes.Game.Services
 
         public override void Destroy()
         {
+            _pool.Destroy();
             _view.Destroy();
         }
 
-        internal ResolverStatus ResolveShape(BaseDroppedZone zone)
+        internal ResolverStatus ResolveShape()
         {
             var status = ResolverStatus.None;
             var draggableShape = _model.DraggableShape;
 
-#if UNITY_EDITOR
-            UnityEngine.Assertions.Assert.IsNotNull(draggableShape);
-#endif
+            if (draggableShape == null || _view.ContainsInTower(draggableShape) || _resolver.Check(draggableShape, out status) == false)
+            {
+                if (status == ResolverStatus.IntersectionRestriction)
+                    ExplodeShape(draggableShape);
 
-            if (_view.ContainsInTower(draggableShape) || _resolver.Check(draggableShape, out status) == false)
                 return status;
+            }
 
-            var newShape = _pool.Get(draggableShape.ShapeType);
-            newShape.Clone(draggableShape);
-            newShape.Show();
-
-            _resolver.AddShape(newShape);
-            _view.AddShapeToTower(newShape);
+            AddToTower(draggableShape);
 
             status = ResolverStatus.Successful;
 
             return status;
         }
 
-        internal void CheckHole()
+        internal bool CheckHole()
         {
+            if (_model.DragSource != DragSource.FromTower)
+                return false;
+
             var draggableShape = _model.DraggableShape;
 
             _pool.Release(draggableShape);
@@ -88,6 +88,8 @@ namespace Cubes.Game.Services
             _view.RemoveShapeFromTower(draggableShape);
 
             draggableShape.Hide();
+
+            return true;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -100,16 +102,17 @@ namespace Cubes.Game.Services
         {
             var isDragging = info.IsDragging;
             var shapePresenter = info.ShapePresenter;
+            var dragSource = info.DragSource;
 
             if (isDragging)
             {
-                _model.UpdateDraggableShape(shapePresenter);
+                _model.UpdateDraggableShape(shapePresenter, dragSource);
 
                 shapePresenter.UpdateDraggableParent(_view.DraggingShapeContainer);
             }
             else
             {
-                _model.UpdateDraggableShape(null);
+                _model.UpdateDraggableShape(null, dragSource);
 
                 shapePresenter.UpdateDraggableParent(shapePresenter.RectTransform);
             }
@@ -118,13 +121,14 @@ namespace Cubes.Game.Services
         private void InitShapes()
         {
             var shapeInfos = _config.ShapeInfos;
+            var dragSource = DragSource.FromStorage;
 
             for (int i = 0; i < shapeInfos.Length; i++)
             {
                 var info = shapeInfos[i];
                 var type = info.Type;
 
-                if (_factory.TryCreate(_view.ShapesContainer, _view.RectTransform, in info, out var shapePresenter) == false)
+                if (_factory.TryCreate(_view.ShapesContainer, _view.RectTransform, in info, dragSource, out var shapePresenter) == false)
                 {
 #if UNITY_EDITOR
                     UnityEngine.Debug.LogError($"[MainScreenPresenter]: Can't create shape {type}");
@@ -153,6 +157,47 @@ namespace Cubes.Game.Services
                 _view.RectTransform);
 
             _pool = new(in args);
+        }
+
+        private void AddToTower(World.IShapePresenter shape)
+        {
+            var startPosition = GetStartPosition(shape);
+            var newShape = _pool.Get(shape.ShapeType);
+            newShape.Clone(shape);
+            newShape.Show();
+
+            _resolver.AddShape(newShape);
+            _view.AddShapeToTower(newShape, in startPosition);
+        }
+
+        private void ExplodeShape(World.IShapePresenter shape)
+        {
+            var startPosition = GetStartPosition(shape);
+            var newShape = _pool.Get(shape.ShapeType);
+            newShape.Clone(shape);
+            newShape.Show();
+
+            _view.ExplodeShape(newShape, in startPosition, AfterExplodeShape);
+
+            void AfterExplodeShape()
+            {
+                _pool.Release(newShape);
+
+                newShape.Hide();
+            }
+        }
+
+        private UnityEngine.Vector2 GetStartPosition(World.IShapePresenter shape)
+        {
+            var screenPoint = UnityEngine.RectTransformUtility.WorldToScreenPoint(UnityEngine.Camera.main, shape.RectTransform.position);
+
+            UnityEngine.RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                _view.TowerShapeContainer,
+                screenPoint,
+                UnityEngine.Camera.main,
+                out var startPosition);
+
+            return startPosition;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
