@@ -3,6 +3,7 @@
     "rootNamespace": "Cubes.Game",
     "references": [
         "Core",
+        "DOTween.Modules",
         "UniRx",
         "Unity.TextMeshPro",
         "Zenject"

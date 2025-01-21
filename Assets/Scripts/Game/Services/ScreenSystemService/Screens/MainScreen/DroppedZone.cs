@@ -1,5 +1,6 @@
 namespace Cubes.Game.Services
 {
+    [UnityEngine.RequireComponent(typeof(UnityEngine.UI.Image))]
     internal sealed class DroppedZone : BaseDroppedZone
     {
         private readonly UniRx.Subject<BaseDroppedZone> _dropped = new();

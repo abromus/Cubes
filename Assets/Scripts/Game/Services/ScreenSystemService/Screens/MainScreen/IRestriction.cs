@@ -2,6 +2,6 @@
 {
     internal interface IRestriction
     {
-        public bool Check(World.IShapePresenter lastShape, World.IShapePresenter shape);
+        public bool Check(World.IShapePresenter lastShape, World.IShapePresenter shape, out ResolverStatus status);
     }
 }

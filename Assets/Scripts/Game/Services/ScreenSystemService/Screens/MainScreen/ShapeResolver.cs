@@ -12,9 +12,11 @@
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        internal bool Check(World.IShapePresenter shape)
+        internal bool Check(World.IShapePresenter shape, out ResolverStatus status)
         {
-            return _shapes.Count == 0 || CheckRestrictions(shape);
+            status = ResolverStatus.None;
+
+            return _shapes.Count == 0 || CheckRestrictions(shape, out status);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -37,8 +39,10 @@
             _shapes.Remove(shape);
         }
 
-        private bool CheckRestrictions(World.IShapePresenter shape)
+        private bool CheckRestrictions(World.IShapePresenter shape, out ResolverStatus status)
         {
+            status = ResolverStatus.Successful;
+
             var minShapes = 1;
 
             if (_shapes.Count < minShapes)
@@ -50,7 +54,7 @@
             {
                 var restriction = _restrictions[i];
 
-                if (restriction.Check(lastShape, shape) == false)
+                if (restriction.Check(lastShape, shape, out status) == false)
                     return false;
             }
 

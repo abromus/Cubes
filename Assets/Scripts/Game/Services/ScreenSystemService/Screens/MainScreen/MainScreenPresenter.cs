@@ -31,9 +31,9 @@ namespace Cubes.Game.Services
             _model = model as MainScreenModel;
             _view = view as MainScreenView;
 
-            InitializeShapes();
-            InitializeResolver();
-            InitializePool();
+            InitShapes();
+            InitResolver();
+            InitPool();
         }
 
         public override void Show()
@@ -55,16 +55,17 @@ namespace Cubes.Game.Services
             _view.Destroy();
         }
 
-        internal void ResolveShape(BaseDroppedZone zone)
+        internal ResolverStatus ResolveShape(BaseDroppedZone zone)
         {
+            var status = ResolverStatus.None;
             var draggableShape = _model.DraggableShape;
 
 #if UNITY_EDITOR
             UnityEngine.Assertions.Assert.IsNotNull(draggableShape);
 #endif
 
-            if (_view.ContainsInTower(draggableShape) || _resolver.Check(draggableShape) == false)
-                return;
+            if (_view.ContainsInTower(draggableShape) || _resolver.Check(draggableShape, out status) == false)
+                return status;
 
             var newShape = _pool.Get(draggableShape.ShapeType);
             newShape.Clone(draggableShape);
@@ -72,6 +73,10 @@ namespace Cubes.Game.Services
 
             _resolver.AddShape(newShape);
             _view.AddShapeToTower(newShape);
+
+            status = ResolverStatus.Successful;
+
+            return status;
         }
 
         internal void CheckHole()
@@ -110,7 +115,7 @@ namespace Cubes.Game.Services
             }
         }
 
-        private void InitializeShapes()
+        private void InitShapes()
         {
             var shapeInfos = _config.ShapeInfos;
 
@@ -132,14 +137,14 @@ namespace Cubes.Game.Services
             }
         }
 
-        private void InitializeResolver()
+        private void InitResolver()
         {
             var towerSize = _view.GetTowerSize();
 
             _resolver = new(in towerSize);
         }
 
-        private void InitializePool()
+        private void InitPool()
         {
             var args = new ShapePoolArgs(
                 _factory,

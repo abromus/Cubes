@@ -9,7 +9,7 @@
             _size = size;
         }
 
-        public bool Check(World.IShapePresenter lastShape, World.IShapePresenter shape)
+        public bool Check(World.IShapePresenter lastShape, World.IShapePresenter shape, out ResolverStatus status)
         {
             var shapeRectTransform = shape.DraggableRectTransform;
             var shapeHeight = shapeRectTransform.rect.height;
@@ -17,7 +17,11 @@
             var containerHeight = _size.y;
             shapePositionY += shapeHeight + containerHeight * Constants.Half;
 
-            return shapePositionY < containerHeight;
+            var check = shapePositionY < containerHeight;
+
+            status = check ? ResolverStatus.Successful : ResolverStatus.ContainerSizeRestriction;
+
+            return check;
         }
     }
 }

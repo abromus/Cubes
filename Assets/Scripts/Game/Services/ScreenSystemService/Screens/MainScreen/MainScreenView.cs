@@ -12,6 +12,7 @@ namespace Cubes.Game.Services
         [UnityEngine.SerializeField] private DroppedZone _holeContainerZone;
         [UnityEngine.SerializeField] private DroppedZone _shapesStorageZone;
         [UnityEngine.SerializeField] private ShapesTower _tower;
+        [UnityEngine.SerializeField] private Commentator _commentator;
         [UnityEngine.Space]
         [UnityEngine.SerializeField] private UnityEngine.AudioClip _backgroundMusic;
 
@@ -68,6 +69,8 @@ namespace Cubes.Game.Services
         internal void AddShapeToTower(World.IShapePresenter shapePresenter)
         {
             _tower.Add(shapePresenter);
+
+            _commentator.ShowAddShapeToTowerMessage();
         }
 
         internal void RemoveShapeFromTower(World.IShapePresenter draggableShape)
@@ -122,16 +125,21 @@ namespace Cubes.Game.Services
 
         private void OnHoleZoneDropped(BaseDroppedZone zone)
         {
+            _commentator.ShowDroppedOnHoleMessage();
+
             _presenter.CheckHole();
         }
 
         private void OnHoleContainerZoneDropped(BaseDroppedZone zone)
         {
+            _commentator.ShowDroppedPastHoleMessage();
         }
 
         private void OnShapesStorageZoneDropped(BaseDroppedZone zone)
         {
-            _presenter.ResolveShape(zone);
+            var status = _presenter.ResolveShape(zone);
+
+            _commentator.ShowResolverMessage(status);
         }
 
         private void OnTowerShapeDragging(World.DraggableShapeInfo info)
