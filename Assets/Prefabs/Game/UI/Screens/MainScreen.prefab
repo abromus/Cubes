@@ -255,8 +255,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rectTransform: {fileID: 248362279155400261}
-  _offset: {x: 0, y: 46, z: 0}
-  _size: {x: 136, y: 46}
+  _offset: {x: 0, y: 50, z: 0}
+  _size: {x: 148, y: 50}
   _segments: 100
 --- !u!114 &8042589807141553329
 MonoBehaviour:

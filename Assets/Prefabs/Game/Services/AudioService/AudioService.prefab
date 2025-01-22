@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7009442863047737792}
   - component: {fileID: 2827289876426576951}
   m_Layer: 0
-  m_Name: OneShotSound
+  m_Name: Sounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _backgroundMusic: {fileID: 7924435826383195986}
-  _oneShotSound: {fileID: 2827289876426576951}
+  _sounds: {fileID: 2827289876426576951}
 --- !u!1 &8899456087147817266
 GameObject:
   m_ObjectHideFlags: 0
