@@ -22,7 +22,7 @@ namespace Cubes.Game.Services
                 return text;
 
 #if UNITY_EDITOR
-            UnityEngine.Debug.LogWarning($"[LocalizeService]: Text for key \"{key}\" wasn't found!");
+            UnityEngine.Debug.LogWarning($"[LocalizeService]: Text for key \"{key}\" wasn't found");
 #endif
             return "<#NOTFOUND>";
         }
@@ -30,6 +30,10 @@ namespace Cubes.Game.Services
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private void ChangeLanguage(string language)
         {
+#if UNITY_EDITOR
+            UnityEngine.Debug.Log($"[LocalizeService]: Language {language} selected");
+#endif
+
             _language = language;
         }
 

@@ -2,7 +2,7 @@ using Zenject;
 
 namespace Cubes.Game.Installers
 {
-    [UnityEngine.CreateAssetMenu(fileName = "GameSettingsInstaller", menuName = "Installers/GameSettingsInstaller")]
+    [UnityEngine.CreateAssetMenu(fileName = nameof(GameSettingsInstaller), menuName = Configs.SettingsKeys.GameInstallersPathKey + nameof(GameSettingsInstaller))]
     internal sealed class GameSettingsInstaller : ScriptableObjectInstaller<GameSettingsInstaller>
     {
         [UnityEngine.SerializeField] private Configs.ShapesConfig _shapesConfig;

@@ -6,7 +6,6 @@ namespace Cubes.Game.Game
     {
         [Zenject.Inject] private readonly Data.GameData _gameData;
         [Zenject.Inject] private readonly Core.Services.StateMachine _stateMachine;
-        [Zenject.Inject] private readonly Core.Services.UpdaterService _updaterService;
         [Zenject.Inject] private readonly Services.ScreenSystemService _screenSystemService;
 
         private readonly CompositeDisposable _subscriptions = new();

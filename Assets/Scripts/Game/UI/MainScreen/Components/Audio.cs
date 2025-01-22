@@ -25,7 +25,7 @@
         {
             var sound = GetSound(type);
 
-            _audioService.PlayOneShotSound(sound);
+            _audioService.PlaySound(sound);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]

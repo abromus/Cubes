@@ -87,6 +87,7 @@ namespace Cubes.Game.UI.MainScreen
             }
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         internal void RemoveShapeFromTower(IShapePresenter draggableShape)
         {
             _tower.Remove(draggableShape);

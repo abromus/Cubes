@@ -5,12 +5,15 @@ namespace Cubes.Game.UI.MainScreen.Shapes.Animations
     internal sealed class ShapeAnimator : UnityEngine.MonoBehaviour
     {
         [UnityEngine.SerializeField] private UnityEngine.RectTransform _rectTransform;
+
         [UnityEngine.Header("Move")]
         [UnityEngine.SerializeField] private float _moveDuration;
+
         [UnityEngine.Header("Jump")]
         [UnityEngine.SerializeField] private float _jumpDuration;
         [UnityEngine.SerializeField] private float _jumpPower;
         [UnityEngine.SerializeField] private int _jumpCount;
+
         [UnityEngine.Header("Move")]
         [UnityEngine.SerializeField] private float _explodeMoveDuration;
         [UnityEngine.SerializeField] private float _explodeJumpPower;

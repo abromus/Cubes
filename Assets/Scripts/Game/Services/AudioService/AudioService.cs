@@ -3,9 +3,9 @@ namespace Cubes.Game.Services
     internal sealed class AudioService : UnityEngine.MonoBehaviour, Core.Services.IPausable, System.IDisposable
     {
         [UnityEngine.SerializeField] private UnityEngine.AudioSource _backgroundMusic;
-        [UnityEngine.SerializeField] private UnityEngine.AudioSource _oneShotSound;
+        [UnityEngine.SerializeField] private UnityEngine.AudioSource _sounds;
 
-        [Zenject.Inject] private readonly Core.Services.UpdaterService _updaterService;
+        [Zenject.Inject] private readonly Core.Services.PauseService _pauseService;
 
         [Zenject.Inject]
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -39,12 +39,12 @@ namespace Cubes.Game.Services
             _backgroundMusic.Play();
         }
 
-        internal void PlayOneShotSound(UnityEngine.AudioClip clip)
+        internal void PlaySound(UnityEngine.AudioClip clip)
         {
             if (clip == null)
                 return;
 
-            _oneShotSound.PlayOneShot(clip);
+            _sounds.PlayOneShot(clip);
         }
 
         internal void StopBackgroundMusic()
@@ -62,19 +62,19 @@ namespace Cubes.Game.Services
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         internal void SetActiveSounds(bool isActive)
         {
-            _oneShotSound.enabled = isActive;
+            _sounds.enabled = isActive;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private void Subscribe()
         {
-            _updaterService.AddPausable(this);
+            _pauseService.AddPausable(this);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private void Unsubscribe()
         {
-            _updaterService?.RemovePausable(this);
+            _pauseService?.RemovePausable(this);
         }
     }
 }

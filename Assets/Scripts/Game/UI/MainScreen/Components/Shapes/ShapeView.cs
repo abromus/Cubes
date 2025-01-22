@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using Cubes.Game.UI.MainScreen.Shapes.Animations;
 using DG.Tweening;
-using Cubes.Game.UI.MainScreen.Shapes.Animations;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Cubes.Game.UI.MainScreen.Shapes
 {
@@ -16,7 +16,7 @@ namespace Cubes.Game.UI.MainScreen.Shapes
         [SerializeField][Range(0f, 1f)] private float _beginDragAlpha;
         [SerializeField][Range(0f, 1f)] private float _endDragAlpha;
         [SerializeField] private float _fadeOutDuration;
-        [SerializeField] private Animations.ShapeAnimator _animator;
+        [SerializeField] private ShapeAnimator _animator;
 
         private bool _isDragging = false;
         private Vector2 _anchorMin;
@@ -39,7 +39,6 @@ namespace Cubes.Game.UI.MainScreen.Shapes
             _anchorMax = _rectTransform.anchorMax;
         }
 
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public override void UpdateConfig(in Configs.ShapeInfo info)
         {
             _image.color = info.Color;
