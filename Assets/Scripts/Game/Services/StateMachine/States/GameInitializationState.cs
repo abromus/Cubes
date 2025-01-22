@@ -2,19 +2,19 @@
 {
     internal sealed class GameInitializationState : Core.Services.IState
     {
-        private readonly World.World _world;
+        private readonly Game.Game _game;
         private readonly Core.Services.StateMachine _stateMachine;
 
-        internal GameInitializationState(Core.Services.StateMachine stateMachine, World.World world)
+        internal GameInitializationState(Core.Services.StateMachine stateMachine, Game.Game game)
         {
             _stateMachine = stateMachine;
-            _world = world;
+            _game = game;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public void Enter()
         {
-            _world.Run();
+            _game.Run();
 
             _stateMachine.Enter<GameRestartState>();
         }

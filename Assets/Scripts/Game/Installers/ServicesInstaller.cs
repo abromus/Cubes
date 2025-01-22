@@ -42,8 +42,8 @@
 
         private void InstallModels()
         {
-            Container.BindInterfacesAndSelfTo<Services.MainScreenModel>().AsTransient();
-            Container.BindInterfacesAndSelfTo<Services.SettingsScreenModel>().AsTransient();
+            Container.BindInterfacesAndSelfTo<UI.MainScreen.MainScreenModel>().AsTransient();
+            Container.BindInterfacesAndSelfTo<UI.SettingsScreen.SettingsScreenModel>().AsTransient();
         }
 
         private void InstallViews()
@@ -60,8 +60,8 @@
 
         private void InstallPresenters()
         {
-            Container.BindInterfacesAndSelfTo<Services.MainScreenPresenter>().AsTransient();
-            Container.BindInterfacesAndSelfTo<Services.SettingsScreenPresenter>().AsTransient();
+            Container.BindInterfacesAndSelfTo<UI.MainScreen.MainScreenPresenter>().AsTransient();
+            Container.BindInterfacesAndSelfTo<UI.SettingsScreen.SettingsScreenPresenter>().AsTransient();
         }
     }
 }

@@ -3,17 +3,17 @@
     internal sealed class GameRestartState : Core.Services.IState
     {
         private readonly Core.Services.StateMachine _stateMachine;
-        private readonly World.World _world;
+        private readonly Game.Game _game;
 
-        internal GameRestartState(Core.Services.StateMachine stateMachine, World.World world)
+        internal GameRestartState(Core.Services.StateMachine stateMachine, Game.Game game)
         {
             _stateMachine = stateMachine;
-            _world = world;
+            _game = game;
         }
 
         public void Enter()
         {
-            _world.Restart();
+            _game.Restart();
 
             _stateMachine.Enter<GameLoopState>();
         }

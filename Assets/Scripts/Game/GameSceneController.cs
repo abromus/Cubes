@@ -5,7 +5,7 @@ namespace Cubes.Game
     internal sealed class GameSceneController : UnityEngine.MonoBehaviour
     {
         [Zenject.Inject] private readonly Core.Services.StateMachine _stateMachine;
-        [Zenject.Inject] private readonly World.World _world;
+        [Zenject.Inject] private readonly Game.Game _game;
 
         private readonly CompositeDisposable _subscriptions = new();
 
@@ -13,8 +13,8 @@ namespace Cubes.Game
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public void Construct()
         {
-            _stateMachine.Add(new Services.GameInitializationState(_stateMachine, _world));
-            _stateMachine.Add(new Services.GameRestartState(_stateMachine, _world));
+            _stateMachine.Add(new Services.GameInitializationState(_stateMachine, _game));
+            _stateMachine.Add(new Services.GameRestartState(_stateMachine, _game));
             _stateMachine.Add(new Services.GameLoopState());
             _stateMachine.Add(new Services.GameExitState());
 
@@ -34,7 +34,7 @@ namespace Cubes.Game
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private void Subscribe()
         {
-            _world.Exited.Subscribe(OnExited).AddTo(_subscriptions);
+            _game.Exited.Subscribe(OnExited).AddTo(_subscriptions);
         }
 
         private void Unsubscribe()
@@ -49,7 +49,7 @@ namespace Cubes.Game
         {
             Unsubscribe();
 
-            _world.Dispose();
+            _game.Dispose();
 
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
