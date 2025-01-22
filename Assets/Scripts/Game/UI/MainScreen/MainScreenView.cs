@@ -70,9 +70,13 @@ namespace Cubes.Game.UI.MainScreen
             return _tower.Contains(draggableShape);
         }
 
-        internal void AddShapeToTower(IShapePresenter shapePresenter, in UnityEngine.Vector2 startPosition)
+        internal void AddShapeToTower(IShapePresenter shapePresenter, in UnityEngine.Vector2 startPosition, bool force = false)
         {
-            _tower.Add(shapePresenter, in startPosition);
+            _tower.Add(shapePresenter, in startPosition, force);
+
+            if (force)
+                return;
+
             _commentator.ShowAddShapeToTowerMessage();
             _audio.PlaySound(SoundType.Jump);
         }
@@ -87,10 +91,10 @@ namespace Cubes.Game.UI.MainScreen
             }
         }
 
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         internal void RemoveShapeFromTower(IShapePresenter draggableShape)
         {
             _tower.Remove(draggableShape);
+            _presenter.RemoveTowerShape(draggableShape);
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
@@ -106,7 +110,9 @@ namespace Cubes.Game.UI.MainScreen
 
             for (int i = count; i >= 0; i--)
             {
-                _presenter.RemoveShape(shapes[i]);
+                var shape = shapes[i];
+                _presenter.RemoveShape(shape);
+                _presenter.RemoveTowerShape(shape);
 
                 shapes.RemoveAt(i);
             }

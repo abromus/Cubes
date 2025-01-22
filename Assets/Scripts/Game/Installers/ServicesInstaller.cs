@@ -42,8 +42,8 @@
 
         private void InstallModels()
         {
-            Container.BindInterfacesAndSelfTo<UI.MainScreen.MainScreenModel>().AsTransient();
-            Container.BindInterfacesAndSelfTo<UI.SettingsScreen.SettingsScreenModel>().AsTransient();
+            Container.BindInterfacesAndSelfTo<UI.MainScreen.MainScreenModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<UI.SettingsScreen.SettingsScreenModel>().AsSingle();
         }
 
         private void InstallViews()

@@ -27,6 +27,8 @@ namespace Cubes.Game.UI.MainScreen.Shapes
 
         public abstract void Clone(IShapePresenter clone);
 
+        public abstract void UpdateConfig(in Configs.ShapeInfo config);
+
         public abstract void UpdatePosition(in UnityEngine.Vector2 position);
 
         public abstract void UpdateDraggablePosition(UnityEngine.EventSystems.PointerEventData eventData);

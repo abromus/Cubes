@@ -49,11 +49,18 @@ namespace Cubes.Game.UI.MainScreen.Shapes
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public override void Clone(IShapePresenter clone)
         {
-            _config = clone.Config;
-
             var position = clone.DraggableRectTransform.anchoredPosition;
+            var config = clone.Config;
 
             _model.UpdatePosition(in position);
+
+            UpdateConfig(in config);
+        }
+
+        public override void UpdateConfig(in Configs.ShapeInfo config)
+        {
+            _config = config;
+
             _view.UpdateConfig(_config);
         }
 

@@ -10,6 +10,7 @@ namespace Cubes.Game.UI.MainScreen
         private ShapeResolver _resolver;
         private ShapePool _pool;
 
+        private Core.Services.SaveLoadService _saveLoadService;
         private Services.ScreenSystemService _screenSystemService;
         private Factories.ShapeFactory _factory;
         private Configs.IShapesConfig _config;
@@ -21,8 +22,13 @@ namespace Cubes.Game.UI.MainScreen
 
         [Zenject.Inject]
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public void Construct(Services.ScreenSystemService screenSystemService, Factories.ShapeFactory factory, Configs.IShapesConfig config)
+        public void Construct(
+            Core.Services.SaveLoadService saveLoadService,
+            Services.ScreenSystemService screenSystemService,
+            Factories.ShapeFactory factory,
+            Configs.IShapesConfig config)
         {
+            _saveLoadService = saveLoadService;
             _screenSystemService = screenSystemService;
             _factory = factory;
             _config = config;
@@ -33,9 +39,12 @@ namespace Cubes.Game.UI.MainScreen
             _model = model as MainScreenModel;
             _view = view as MainScreenView;
 
-            InitShapes();
+            _model.Init(_saveLoadService);
+
+            InitStorageShapes();
             InitResolver();
             InitPool();
+            LoadData();
         }
 
         public override void Show()
@@ -53,6 +62,7 @@ namespace Cubes.Game.UI.MainScreen
             _model.UpdateIsShown(false);
             _resolver.Clear();
             _view.Clear();
+            _model.SaveData();
 
             Unsubscribe();
         }
@@ -61,6 +71,7 @@ namespace Cubes.Game.UI.MainScreen
         {
             ClearSubscriptions(_shapeSubscriptions);
 
+            _model.SaveData();
             _pool.Destroy();
             _view.Destroy();
         }
@@ -90,6 +101,12 @@ namespace Cubes.Game.UI.MainScreen
             _pool.Release(shape);
 
             shape.Hide();
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        internal void RemoveTowerShape(IShapePresenter shape)
+        {
+            _model.RemoveTowerShape(shape);
         }
 
         internal bool CheckHole()
@@ -134,7 +151,7 @@ namespace Cubes.Game.UI.MainScreen
             }
         }
 
-        private void InitShapes()
+        private void InitStorageShapes()
         {
             var shapeInfos = _config.ShapeInfos;
             var dragSource = DragSource.FromStorage;
@@ -153,7 +170,7 @@ namespace Cubes.Game.UI.MainScreen
 
                 shapePresenter.Dragging.Subscribe(OnShapeDragging).AddTo(_shapeSubscriptions);
 
-                _model.AddShape(shapePresenter);
+                _model.AddStorageShape(shapePresenter);
             }
         }
 
@@ -175,6 +192,12 @@ namespace Cubes.Game.UI.MainScreen
             _pool = new(in args);
         }
 
+        private void LoadData()
+        {
+            var loader = new MainScreenDataLoader(_model, _view, _resolver, _pool, _config);
+            loader.LoadData();
+        }
+
         private void AddToTower(IShapePresenter shape)
         {
             var startPosition = GetStartPosition(shape);
@@ -184,6 +207,7 @@ namespace Cubes.Game.UI.MainScreen
 
             _resolver.AddShape(newShape);
             _view.AddShapeToTower(newShape, in startPosition);
+            _model.AddTowerShape(newShape);
         }
 
         private void ExplodeShape(IShapePresenter shape)

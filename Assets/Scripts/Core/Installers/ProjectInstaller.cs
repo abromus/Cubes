@@ -6,6 +6,7 @@ namespace Cubes.Core.Installers
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<Services.PauseService>().AsSingle();
+            Container.Bind<Services.SaveLoadService>().AsSingle();
         }
     }
 }

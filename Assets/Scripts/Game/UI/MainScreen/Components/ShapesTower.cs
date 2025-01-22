@@ -38,13 +38,20 @@ namespace Cubes.Game.UI.MainScreen
             return _shapes.Contains(shape);
         }
 
-        internal void Add(IShapePresenter shape, in UnityEngine.Vector2 startPosition)
+        internal void Add(IShapePresenter shape, in UnityEngine.Vector2 startPosition, bool force)
         {
             shape.UpdateParent(_rectTransform);
 
-            var position = GetShapePosition(shape);
-            shape.UpdatePosition(in position);
-            shape.Jump(in startPosition, in position);
+            if (force == false)
+            {
+                var position = GetShapePosition(shape);
+                shape.UpdatePosition(in position);
+                shape.Jump(in startPosition, in position);
+            }
+            else
+            {
+                shape.UpdatePosition(in startPosition);
+            }
 
             _subscriptions[shape] = shape.Dragging.Subscribe(OnShapeDragging);
             _shapes.Add(shape);
@@ -166,6 +173,12 @@ namespace Cubes.Game.UI.MainScreen
                 var targetPosition = new UnityEngine.Vector2(currentShape.Position.x, nextShape.Position.y);
                 var delay = shapesLeft * _moveDelay;
                 --shapesLeft;
+
+#if UNITY_EDITOR
+                var offsetX = UnityEngine.Mathf.Abs(targetPosition.x - startPosition.x);
+
+                UnityEngine.Assertions.Assert.IsTrue(offsetX <= shape.DraggableRectTransform.rect.width);
+#endif
 
                 currentShape.UpdatePosition(in targetPosition);
                 currentShape.Move(in startPosition, in targetPosition, delay);

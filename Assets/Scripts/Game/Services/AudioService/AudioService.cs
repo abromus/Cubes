@@ -49,6 +49,9 @@ namespace Cubes.Game.Services
 
         internal void StopBackgroundMusic()
         {
+            if (this == null)
+                return;
+
             _backgroundMusic.clip = null;
             _backgroundMusic.Stop();
         }
