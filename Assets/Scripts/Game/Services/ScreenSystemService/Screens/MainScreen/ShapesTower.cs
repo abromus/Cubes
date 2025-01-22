@@ -21,6 +21,8 @@ namespace Cubes.Game.Services
 
         internal Subject<World.DraggableShapeInfo> Dragging => _dragging;
 
+        internal System.Collections.Generic.List<World.IShapePresenter> Shapes => _shapes;
+
         internal void Init()
         {
             _halfWidth = _rectTransform.rect.width * Constants.Half;

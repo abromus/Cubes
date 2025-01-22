@@ -5,7 +5,7 @@ namespace Cubes.Core.Installers
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public override void InstallBindings()
         {
-            Container.Bind<Services.UpdaterService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<Services.UpdaterService>().AsSingle();
         }
     }
 }

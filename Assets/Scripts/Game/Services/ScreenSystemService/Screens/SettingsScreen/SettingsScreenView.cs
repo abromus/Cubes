@@ -7,21 +7,24 @@ namespace Cubes.Game.Services
         [UnityEngine.SerializeField] private UnityEngine.UI.Button _buttonRestart;
         [UnityEngine.SerializeField] private UnityEngine.UI.Button _buttonExit;
         [UnityEngine.SerializeField] private UnityEngine.UI.Button _buttonApply;
+        [UnityEngine.SerializeField] private SettingsScreenLocalizer _localizer;
 
         private SettingsScreenPresenter _presenter;
-        private LocalizeService _localizeService;
 
+        [Zenject.Inject] private readonly Data.GameData _gameData;
         [Zenject.Inject] private readonly Core.Services.UpdaterService _updaterService;
+        [Zenject.Inject] private readonly LocalizeService _localizeService;
 
         private readonly CompositeDisposable _subscriptions = new();
 
         internal override Configs.ScreenType ScreenType => Configs.ScreenType.Settings;
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public override void Init(IScreenPresenter presenter, LocalizeService localizeService)
+        public override void Init(IScreenPresenter presenter)
         {
             _presenter = presenter as SettingsScreenPresenter;
-            _localizeService = localizeService;
+
+            _localizer.Init(_localizeService);
         }
 
         internal override void Show()
@@ -59,14 +62,14 @@ namespace Cubes.Game.Services
 
         private void OnButtonRestartClicked(Unit _)
         {
-            //_gameData.Restart();
+            _gameData.Restart();
 
             _presenter.Hide();
         }
 
         private void OnButtonExitClicked(Unit _)
         {
-            //_gameData.Exit();
+            _gameData.Exit();
         }
 
         private void OnButtonApplyClicked(Unit _)

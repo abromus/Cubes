@@ -10,7 +10,7 @@
         internal UnityEngine.RectTransform RectTransform => _rectTransform;
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public abstract void Init(IScreenPresenter presenter, LocalizeService localizeService);
+        public abstract void Init(IScreenPresenter presenter);
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         internal virtual void Show()

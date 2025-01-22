@@ -2,6 +2,6 @@
 {
     internal interface IScreenView
     {
-        public void Init(IScreenPresenter presenter, LocalizeService localizeService);
+        public void Init(IScreenPresenter presenter);
     }
 }

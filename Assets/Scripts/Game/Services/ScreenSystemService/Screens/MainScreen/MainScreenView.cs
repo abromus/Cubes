@@ -16,9 +16,10 @@ namespace Cubes.Game.Services
         [UnityEngine.Space]
         [UnityEngine.SerializeField] private UnityEngine.AudioClip _backgroundMusic;
 
-        [Zenject.Inject] private readonly AudioService _audioService;
-
         private MainScreenPresenter _presenter;
+
+        [Zenject.Inject] private readonly AudioService _audioService;
+        [Zenject.Inject] private readonly LocalizeService _localizeService;
 
         private readonly CompositeDisposable _subscriptions = new();
 
@@ -31,10 +32,10 @@ namespace Cubes.Game.Services
         internal UnityEngine.RectTransform TowerShapeContainer => _tower.ShapeContainer;
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        public override void Init(IScreenPresenter presenter, LocalizeService localizeService)
+        public override void Init(IScreenPresenter presenter)
         {
             _presenter = presenter as MainScreenPresenter;
-            _commentator.Init(localizeService);
+            _commentator.Init(_localizeService);
         }
 
         internal override void Show()
@@ -88,6 +89,19 @@ namespace Cubes.Game.Services
         internal UnityEngine.Vector2 GetTowerSize()
         {
             return _tower.GetAvailableSize();
+        }
+
+        internal void Clear()
+        {
+            var shapes = _tower.Shapes;
+            var count = shapes.Count - 1;
+
+            for (int i = count; i >= 0; i--)
+            {
+                _presenter.RemoveShape(shapes[i]);
+
+                shapes.RemoveAt(i);
+            }
         }
 
         private void Awake()

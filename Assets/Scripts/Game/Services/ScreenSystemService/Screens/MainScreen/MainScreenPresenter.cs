@@ -14,6 +14,7 @@ namespace Cubes.Game.Services
         private Configs.IShapesConfig _config;
 
         private readonly CompositeDisposable _subscriptions = new();
+        private readonly CompositeDisposable _shapeSubscriptions = new();
 
         public override bool IsShown => _model.IsShown.Value;
 
@@ -45,13 +46,20 @@ namespace Cubes.Game.Services
 
         public override void Hide()
         {
+            if (_model.IsShown.Value == false)
+                return;
+
             _model.UpdateIsShown(false);
+            _resolver.Clear();
+            _view.Clear();
 
             Unsubscribe();
         }
 
         public override void Destroy()
         {
+            ClearSubscriptions(_shapeSubscriptions);
+
             _pool.Destroy();
             _view.Destroy();
         }
@@ -74,6 +82,13 @@ namespace Cubes.Game.Services
             status = ResolverStatus.Successful;
 
             return status;
+        }
+
+        internal void RemoveShape(World.IShapePresenter shape)
+        {
+            _pool.Release(shape);
+
+            shape.Hide();
         }
 
         internal bool CheckHole()
@@ -135,7 +150,7 @@ namespace Cubes.Game.Services
 #endif
                 }
 
-                shapePresenter.Dragging.Subscribe(OnShapeDragging).AddTo(_subscriptions);
+                shapePresenter.Dragging.Subscribe(OnShapeDragging).AddTo(_shapeSubscriptions);
 
                 _model.AddShape(shapePresenter);
             }
@@ -181,9 +196,7 @@ namespace Cubes.Game.Services
 
             void AfterExplodeShape()
             {
-                _pool.Release(newShape);
-
-                newShape.Hide();
+                RemoveShape(newShape);
             }
         }
 
@@ -206,12 +219,18 @@ namespace Cubes.Game.Services
             _model.IsShown.Subscribe(OnUpdateIsShown).AddTo(_subscriptions);
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         private void Unsubscribe()
         {
-            foreach (var subscription in _subscriptions)
+            ClearSubscriptions(_subscriptions);
+        }
+
+        private void ClearSubscriptions(CompositeDisposable subscriptions)
+        {
+            foreach (var subscription in subscriptions)
                 subscription.Dispose();
 
-            _subscriptions.Clear();
+            subscriptions.Clear();
         }
 
         private void OnUpdateIsShown(bool isShown)

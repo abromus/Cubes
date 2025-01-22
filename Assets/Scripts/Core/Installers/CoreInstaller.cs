@@ -18,8 +18,6 @@ namespace Cubes.Core.Installers
 
         private void InstallServices()
         {
-            Container.BindInterfacesAndSelfTo<Services.UpdaterService>().AsSingle();
-
             Container.Bind<Services.SceneLoader>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<Services.StateMachine>().AsSingle();

@@ -39,6 +39,12 @@
             _shapes.Remove(shape);
         }
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        internal void Clear()
+        {
+            _shapes.Clear();
+        }
+
         private bool CheckRestrictions(World.IShapePresenter shape, out ResolverStatus status)
         {
             status = ResolverStatus.Successful;

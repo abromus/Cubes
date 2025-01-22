@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 4533593589233634448}
   - component: {fileID: 8654075816682289963}
   - component: {fileID: 5359204536321395510}
+  - component: {fileID: -527895039172253283}
   m_Layer: 0
   m_Name: SettingsScreen
   m_TagString: Untagged
@@ -268,6 +269,25 @@ MonoBehaviour:
   _buttonRestart: {fileID: 5553493934187380209}
   _buttonExit: {fileID: 6275511608082365433}
   _buttonApply: {fileID: 4019159706399654700}
+  _localizer: {fileID: -527895039172253283}
+--- !u!114 &-527895039172253283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038638015366065806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34383d80eaabe5741a36ce0455c242b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _buttonRestartText: {fileID: 7502852607224729657}
+  _buttonExitText: {fileID: 7520563708504026598}
+  _buttonApplyText: {fileID: 4949394949444252427}
+  _buttonRestartKey: BUTTON_RESTART_KEY
+  _buttonExitKey: BUTTON_EXIT_KEY
+  _buttonApplyKey: BUTTON_APPLY_KEY
 --- !u!1 &1842891211990634481
 GameObject:
   m_ObjectHideFlags: 0

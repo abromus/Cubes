@@ -26,6 +26,9 @@ namespace Cubes.Game.Services
 
         public override void Hide()
         {
+            if (_model.IsShown.Value == false)
+                return;
+
             _model.UpdateIsShown(false);
 
             Unsubscribe();

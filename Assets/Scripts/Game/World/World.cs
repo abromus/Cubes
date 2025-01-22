@@ -1,22 +1,19 @@
-using Cubes.Core.Services;
-using Cubes.Game.Services;
+using UniRx;
 
 namespace Cubes.Game.World
 {
-    internal sealed class World : IUpdatable, IPausable, System.IDisposable
+    internal sealed class World : System.IDisposable
     {
-        [Zenject.Inject] private readonly StateMachine _stateMachine;
-        [Zenject.Inject] private readonly UpdaterService _updaterService;
-        [Zenject.Inject] private readonly ScreenSystemService _screenSystemService;
+        [Zenject.Inject] private readonly Data.GameData _gameData;
+        [Zenject.Inject] private readonly Core.Services.StateMachine _stateMachine;
+        [Zenject.Inject] private readonly Core.Services.UpdaterService _updaterService;
+        [Zenject.Inject] private readonly Services.ScreenSystemService _screenSystemService;
 
-        public void Tick(float deltaTime)
-        {
-        }
+        private readonly CompositeDisposable _subscriptions = new();
 
-        public void SetPause(bool isPaused)
-        {
-        }
+        internal Subject<Unit> Exited { get; } = new();
 
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         public void Dispose()
         {
             Unsubscribe();
@@ -30,37 +27,34 @@ namespace Cubes.Game.World
 
         internal void Restart()
         {
-            ShowMainScreen();
-            SubscribeOnUpdaterService();
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        private void ShowMainScreen()
-        {
+            _screenSystemService.HideAll();
             _screenSystemService.Show(Configs.ScreenType.Main);
         }
 
         private void Subscribe()
         {
+            _gameData.Restarted.Subscribe(OnRestarted).AddTo(_subscriptions);
+            _gameData.Exited.Subscribe(OnExited).AddTo(_subscriptions);
         }
 
         private void Unsubscribe()
         {
+            foreach (var subscription in _subscriptions)
+                subscription.Dispose();
+
+            _subscriptions.Clear();
         }
 
-        private void SubscribeOnUpdaterService()
+        private void OnRestarted(Unit _)
         {
-            _updaterService.AddUpdatable(this);
-            _updaterService.AddPausable(this);
+            _stateMachine.Enter<Services.GameRestartState>();
         }
 
-        private void UnubscribeOnUpdaterService()
+        private void OnExited(Unit _)
         {
-            if (_updaterService != null)
-            {
-                _updaterService.RemoveUpdatable(this);
-                _updaterService.RemovePausable(this);
-            }
+            _stateMachine.Enter<Services.GameExitState>();
+
+            Exited.OnNext(Unit.Default);
         }
     }
 }

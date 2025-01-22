@@ -35,3 +35,12 @@ MonoBehaviour:
     _ru: "\u0411\u0430\u0448\u043D\u044F \u0441\u043B\u0438\u0448\u043A\u043E\u043C
       \u0432\u044B\u0441\u043E\u043A\u0430!"
     _en: The tower is too high!
+  - _key: BUTTON_RESTART_KEY
+    _ru: "\u041F\u0435\u0440\u0435\u0437\u0430\u043F\u0443\u0441\u0442\u0438\u0442\u044C"
+    _en: Restart
+  - _key: BUTTON_EXIT_KEY
+    _ru: "\u0412\u044B\u0439\u0442\u0438"
+    _en: Exit
+  - _key: BUTTON_APPLY_KEY
+    _ru: "\u041F\u0440\u0438\u043C\u0435\u043D\u0438\u0442\u044C"
+    _en: Apply
