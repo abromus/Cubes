@@ -4,7 +4,6 @@ namespace Cubes.Game.Services
     {
         [UnityEngine.SerializeField] private UnityEngine.AudioSource _backgroundMusic;
         [UnityEngine.SerializeField] private UnityEngine.AudioSource _oneShotSound;
-        [UnityEngine.SerializeField] private UnityEngine.Transform _loopSoundsContainer;
 
         [Zenject.Inject] private readonly Core.Services.UpdaterService _updaterService;
 
@@ -52,6 +51,18 @@ namespace Cubes.Game.Services
         {
             _backgroundMusic.clip = null;
             _backgroundMusic.Stop();
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        internal void SetActiveBackgroundMusic(bool isActive)
+        {
+            _backgroundMusic.enabled = isActive;
+        }
+
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+        internal void SetActiveSounds(bool isActive)
+        {
+            _oneShotSound.enabled = isActive;
         }
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]

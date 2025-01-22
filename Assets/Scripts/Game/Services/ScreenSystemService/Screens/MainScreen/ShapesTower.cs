@@ -69,7 +69,7 @@ namespace Cubes.Game.Services
             _shapes.Remove(shape);
         }
 
-        internal void Explode(World.IShapePresenter shape, in UnityEngine.Vector2 startPosition, System.Action callback)
+        internal void Explode(World.IShapePresenter shape, in UnityEngine.Vector2 startPosition, System.Action falledCallback, System.Action explodedCallback)
         {
             shape.UpdateParent(_rectTransform);
 
@@ -79,7 +79,8 @@ namespace Cubes.Game.Services
                 in startPosition,
                 in targetMovePosition,
                 in targetFallPosition,
-                callback);
+                falledCallback,
+                explodedCallback);
 
             shape.UpdatePosition(in _shapePosition);
             shape.Explode(in args);

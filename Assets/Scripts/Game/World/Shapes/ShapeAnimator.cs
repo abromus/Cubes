@@ -48,21 +48,27 @@ namespace Cubes.Game.World
         {
             KillAnimation();
 
-            var callback = args.Callback;
+            var falledCallback = args.FalledCallback;
+            var explodedCallback = args.ExplodedCallback;
 
             _rectTransform.anchoredPosition = args.StartMovePosition;
 
             _sequence = DOTween.Sequence()
                 .Append(_rectTransform.DOJumpAnchorPos(args.TargetMovePosition, _explodeJumpPower, _explodeJumpCount, _explodeMoveDuration))
-                .Append(_rectTransform.DOLocalMove(args.TargetFallPosition, _explodeFallDuration))
+                .Append(_rectTransform.DOLocalMove(args.TargetFallPosition, _explodeFallDuration).OnComplete(AfterFall))
                 .Append(_rectTransform.DOShakeRotation(_explodeShakeDuration, _explodeShakeStrength, _explodeShakeVibrato))
                 .OnComplete(AfterExplode);
+
+            void AfterFall()
+            {
+                falledCallback?.Invoke();
+            }
 
             void AfterExplode()
             {
                 KillAnimation();
 
-                callback?.Invoke();
+                explodedCallback?.Invoke();
             }
         }
 

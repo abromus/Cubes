@@ -4,6 +4,8 @@ namespace Cubes.Game.Services
 {
     internal sealed class SettingsScreenView : BaseScreenView
     {
+        [UnityEngine.SerializeField] private UnityEngine.UI.Toggle _toggleBackgroundMusic;
+        [UnityEngine.SerializeField] private UnityEngine.UI.Toggle _togglesSound;
         [UnityEngine.SerializeField] private UnityEngine.UI.Button _buttonRestart;
         [UnityEngine.SerializeField] private UnityEngine.UI.Button _buttonExit;
         [UnityEngine.SerializeField] private UnityEngine.UI.Button _buttonApply;
@@ -12,7 +14,7 @@ namespace Cubes.Game.Services
         private SettingsScreenPresenter _presenter;
 
         [Zenject.Inject] private readonly Data.GameData _gameData;
-        [Zenject.Inject] private readonly Core.Services.UpdaterService _updaterService;
+        [Zenject.Inject] private readonly AudioService _audioService;
         [Zenject.Inject] private readonly LocalizeService _localizeService;
 
         private readonly CompositeDisposable _subscriptions = new();
@@ -31,8 +33,6 @@ namespace Cubes.Game.Services
         {
             base.Show();
 
-            _updaterService.SetPause(true);
-
             Subscribe();
         }
 
@@ -41,12 +41,12 @@ namespace Cubes.Game.Services
             base.Hide();
 
             Unsubscribe();
-
-            _updaterService.SetPause(false);
         }
 
         private void Subscribe()
         {
+            _toggleBackgroundMusic.OnValueChangedAsObservable().Subscribe(OnBackgroundMusicChanged).AddTo(_subscriptions);
+            _togglesSound.OnValueChangedAsObservable().Subscribe(OnSoundsChanged).AddTo(_subscriptions);
             _buttonRestart.OnClickAsObservable().Subscribe(OnButtonRestartClicked).AddTo(_subscriptions);
             _buttonExit.OnClickAsObservable().Subscribe(OnButtonExitClicked).AddTo(_subscriptions);
             _buttonApply.OnClickAsObservable().Subscribe(OnButtonApplyClicked).AddTo(_subscriptions);
@@ -58,6 +58,16 @@ namespace Cubes.Game.Services
                 subscription.Dispose();
 
             _subscriptions.Clear();
+        }
+
+        private void OnBackgroundMusicChanged(bool isActive)
+        {
+            _audioService.SetActiveBackgroundMusic(isActive);
+        }
+
+        private void OnSoundsChanged(bool isActive)
+        {
+            _audioService.SetActiveSounds(isActive);
         }
 
         private void OnButtonRestartClicked(Unit _)

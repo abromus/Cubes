@@ -483,6 +483,7 @@ GameObject:
   - component: {fileID: 8552540213371721921}
   - component: {fileID: 6187853245695575874}
   - component: {fileID: 1857724822212104481}
+  - component: {fileID: 5712513537518768161}
   m_Layer: 5
   m_Name: MainScreen
   m_TagString: Untagged
@@ -607,7 +608,7 @@ MonoBehaviour:
   _shapesStorageZone: {fileID: 1273111746144654092}
   _tower: {fileID: 4603823513185433557}
   _commentator: {fileID: 1857724822212104481}
-  _backgroundMusic: {fileID: 0}
+  _audio: {fileID: 5712513537518768161}
 --- !u!114 &1857724822212104481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -627,6 +628,22 @@ MonoBehaviour:
   _minShapeCountRestrictionKey: MIN_SHAPE_COUNT_RESTRICTION_KEY
   _intersectionRestrictionKey: INTERSECTION_RESTRICTION_KEY
   _containerSizeRestrictionKey: CONTAINER_SIZE_RESTRICTION_KEY
+--- !u!114 &5712513537518768161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2719465015976031410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fade0f0f29cf2b478657fbb73f61cbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _backgroundMusic: {fileID: 8300000, guid: 51f614369b611e24f90d4c3e0d8a891b, type: 3}
+  _jumpSound: {fileID: 8300000, guid: dcf2b24bb9955054c9134a458ede2c49, type: 3}
+  _holeSound: {fileID: 8300000, guid: 2c5f41e06efd4d1438933aecf7c3df47, type: 3}
+  _explodeSound: {fileID: 8300000, guid: 724885061ed0e764282a7efa3dc0e137, type: 3}
 --- !u!1 &3264769458295278326
 GameObject:
   m_ObjectHideFlags: 0

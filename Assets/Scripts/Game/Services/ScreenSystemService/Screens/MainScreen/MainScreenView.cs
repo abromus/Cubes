@@ -5,16 +5,15 @@ namespace Cubes.Game.Services
     internal sealed class MainScreenView : BaseScreenView
     {
         [UnityEngine.SerializeField] private UnityEngine.UI.Button _buttonSettings;
-        [UnityEngine.Space]
         [UnityEngine.SerializeField] private UnityEngine.RectTransform _shapesContainer;
         [UnityEngine.SerializeField] private UnityEngine.RectTransform _draggingShapeContainer;
+        [UnityEngine.Space]
         [UnityEngine.SerializeField] private HoleDroppedZone _holeZone;
         [UnityEngine.SerializeField] private DroppedZone _holeContainerZone;
         [UnityEngine.SerializeField] private DroppedZone _shapesStorageZone;
         [UnityEngine.SerializeField] private ShapesTower _tower;
         [UnityEngine.SerializeField] private Commentator _commentator;
-        [UnityEngine.Space]
-        [UnityEngine.SerializeField] private UnityEngine.AudioClip _backgroundMusic;
+        [UnityEngine.SerializeField] private Audio _audio;
 
         private MainScreenPresenter _presenter;
 
@@ -36,13 +35,15 @@ namespace Cubes.Game.Services
         {
             _presenter = presenter as MainScreenPresenter;
             _commentator.Init(_localizeService);
+            _audio.Init(_audioService);
         }
 
         internal override void Show()
         {
             base.Show();
 
-            PlayBackgroundMusic();
+            _audio.PlayBackgroundMusic();
+
             Subscribe();
         }
 
@@ -50,7 +51,8 @@ namespace Cubes.Game.Services
         {
             base.Hide();
 
-            StopBackgroundMusic();
+            _audio.StopBackgroundMusic();
+
             Unsubscribe();
         }
 
@@ -70,14 +72,18 @@ namespace Cubes.Game.Services
         internal void AddShapeToTower(World.IShapePresenter shapePresenter, in UnityEngine.Vector2 startPosition)
         {
             _tower.Add(shapePresenter, in startPosition);
-
             _commentator.ShowAddShapeToTowerMessage();
+            _audio.PlaySound(SoundType.Jump);
         }
 
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
         internal void ExplodeShape(World.IShapePresenter shapePresenter, in UnityEngine.Vector2 startPosition, System.Action callback)
         {
-            _tower.Explode(shapePresenter, in startPosition, callback);
+            _tower.Explode(shapePresenter, in startPosition, Falled, callback);
+
+            void Falled()
+            {
+                _audio.PlaySound(SoundType.Explode);
+            }
         }
 
         internal void RemoveShapeFromTower(World.IShapePresenter draggableShape)
@@ -109,18 +115,6 @@ namespace Cubes.Game.Services
             _tower.Init();
         }
 
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        private void PlayBackgroundMusic()
-        {
-            _audioService.PlayBackgroundMusic(_backgroundMusic);
-        }
-
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
-        private void StopBackgroundMusic()
-        {
-            _audioService.StopBackgroundMusic();
-        }
-
         private void Subscribe()
         {
             _buttonSettings.OnClickAsObservable().Subscribe(OnButtonSettingsClicked).AddTo(_subscriptions);
@@ -145,8 +139,11 @@ namespace Cubes.Game.Services
 
         private void OnHoleZoneDropped(BaseDroppedZone zone)
         {
-            if (_presenter.CheckHole())
-                _commentator.ShowDroppedOnHoleMessage();
+            if (_presenter.CheckHole() == false)
+                return;
+
+            _commentator.ShowDroppedOnHoleMessage();
+            _audio.PlaySound(SoundType.Hole);
         }
 
         private void OnHoleContainerZoneDropped(BaseDroppedZone zone)
